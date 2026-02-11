@@ -22,7 +22,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   // Each front/back shows half of the total percentage (e.g., 4.5% front + 4.5% back = 9% total)
   const adultAreaDefinitions = {
     // Front body areas - each shows 50% of total
-    head: { label: 'Cabeza', maxValue: 4.5, color: '#fca5a5', side: 'both' },
+    headAnterior: { label: 'Cabeza Anterior', maxValue: 4.5, color: '#fca5a5', side: 'front' },
     torsoAnterior: { label: 'Tórax Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
     abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
     rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 2.25, color: '#60a5fa', side: 'front' },
@@ -31,6 +31,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
     
     // Back body areas - each shows 50% of total
+    headPosterior: { label: 'Cabeza Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
     torsoPosterior: { label: 'Tórax Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
     abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
     rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 2.25, color: '#60a5fa', side: 'back' },
@@ -45,7 +46,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   // Each front/back shows 50% of total percentage
   const childAreaDefinitions = {
     // Front body areas - each shows 50% of total
-    head: { label: 'Cabeza', maxValue: 4.5, color: '#fca5a5', side: 'both' },
+    headAnterior: { label: 'Cabeza Anterior', maxValue: 4.5, color: '#fca5a5', side: 'front' },
     torsoAnterior: { label: 'Tórax Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
     abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
     rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 0.75, color: '#60a5fa', side: 'front' },
@@ -54,6 +55,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
     
     // Back body areas - each shows 50% of total
+    headPosterior: { label: 'Cabeza Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
     torsoPosterior: { label: 'Tórax Posterior', maxValue: 4, color: '#f97316', side: 'back' },
     abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 4, color: '#f97316', side: 'back' },
     rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 0.75, color: '#60a5fa', side: 'back' },
@@ -107,7 +109,8 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
 
   const handleClear = () => {
     const empty = {
-      head: 0,
+      headAnterior: 0,
+      headPosterior: 0,
       torsoAnterior: 0,
       torsoPosterior: 0,
       abdomenAnterior: 0,
@@ -178,23 +181,23 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
             viewBox="0 0 400 700"
             className="w-full max-w-sm mx-auto"
           >
-            {/* Head */}
+            {/* Head Anterior */}
             <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'head')}
+              onMouseMove={(e) => handleSvgMouseMove(e, 'headAnterior')}
               onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('head', hoveredValue)}
+              onClick={() => handleAreaClick('headAnterior', hoveredValue)}
               className="cursor-pointer hover:opacity-75 transition-opacity"
             >
               <circle
                 cx="200"
                 cy="60"
                 r="35"
-                fill={hoveredArea === 'head' ? '#fca5a5' : '#fecaca'}
-                stroke={areas.head > 0 ? '#dc2626' : '#999'}
+                fill={hoveredArea === 'headAnterior' ? '#fca5a5' : '#fecaca'}
+                stroke={areas.headAnterior > 0 ? '#dc2626' : '#999'}
                 strokeWidth="2"
               />
               <text x="200" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-                {hoveredArea === 'head' ? hoveredValue.toFixed(1) : areas.head > 0 ? areas.head.toFixed(1) : '?'}%
+                {hoveredArea === 'headAnterior' ? hoveredValue.toFixed(1) : areas.headAnterior > 0 ? areas.headAnterior.toFixed(1) : '?'}%
               </text>
             </g>
 
@@ -357,23 +360,23 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
             viewBox="0 0 400 700"
             className="w-full max-w-sm mx-auto"
           >
-            {/* Head (same as front) */}
+            {/* Head Posterior */}
             <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'head')}
+              onMouseMove={(e) => handleSvgMouseMove(e, 'headPosterior')}
               onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('head', hoveredValue)}
+              onClick={() => handleAreaClick('headPosterior', hoveredValue)}
               className="cursor-pointer hover:opacity-75 transition-opacity"
             >
               <circle
                 cx="200"
                 cy="60"
                 r="35"
-                fill={hoveredArea === 'head' ? '#fca5a5' : '#fecaca'}
-                stroke={areas.head > 0 ? '#dc2626' : '#999'}
+                fill={hoveredArea === 'headPosterior' ? '#fca5a5' : '#fecaca'}
+                stroke={areas.headPosterior > 0 ? '#dc2626' : '#999'}
                 strokeWidth="2"
               />
               <text x="200" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-                {hoveredArea === 'head' ? hoveredValue.toFixed(1) : areas.head > 0 ? areas.head.toFixed(1) : '?'}%
+                {hoveredArea === 'headPosterior' ? hoveredValue.toFixed(1) : areas.headPosterior > 0 ? areas.headPosterior.toFixed(1) : '?'}%
               </text>
             </g>
 

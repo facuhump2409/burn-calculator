@@ -75,8 +75,12 @@ export const ClinicalSummary: React.FC<ClinicalSummaryProps> = ({ onBack, onRese
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="bg-white p-3 rounded">
-              <p className="text-gray-600">Cabeza</p>
-              <p className="font-bold text-lg">{data.bodyAreas.head.toFixed(1)}%</p>
+              <p className="text-gray-600">Cabeza Anterior</p>
+              <p className="font-bold text-lg">{data.bodyAreas.headAnterior.toFixed(1)}%</p>
+            </div>
+            <div className="bg-white p-3 rounded">
+              <p className="text-gray-600">Cabeza Posterior</p>
+              <p className="font-bold text-lg">{data.bodyAreas.headPosterior.toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Tórax Anterior</p>

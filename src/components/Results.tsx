@@ -71,8 +71,12 @@ export const Results: React.FC<ResultsProps> = ({ onNext, onBack }) => {
         <h3 className="text-lg font-bold text-gray-800 mb-4">Distribución de Áreas Quemadas</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="bg-red-50 p-3 rounded border border-red-200">
-            <p className="text-xs text-gray-600">Cabeza</p>
-            <p className="text-lg font-bold text-red-600">{data.bodyAreas.head.toFixed(1)}%</p>
+            <p className="text-xs text-gray-600">Cabeza Anterior</p>
+            <p className="text-lg font-bold text-red-600">{data.bodyAreas.headAnterior.toFixed(1)}%</p>
+          </div>
+          <div className="bg-red-50 p-3 rounded border border-red-200">
+            <p className="text-xs text-gray-600">Cabeza Posterior</p>
+            <p className="text-lg font-bold text-red-600">{data.bodyAreas.headPosterior.toFixed(1)}%</p>
           </div>
           <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
             <p className="text-xs text-gray-600">Tórax Anterior</p>

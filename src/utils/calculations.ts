@@ -39,7 +39,8 @@ export function getLundBrowderPercentages(ageYears: number) {
   if (ageYears < 1) {
     // 1-year-old Lund-Browder percentages from medical paper
     return {
-      head: 4.5, // shared between front and back
+      headAnterior: 4.5, // split 50/50 between anterior and posterior
+      headPosterior: 4.5,
       torsoAnterior: 8, // split as 4% left + 4% right
       torsoPosterior: 8,
       abdomenAnterior: 8, // split as 4% left + 4% right
@@ -59,7 +60,8 @@ export function getLundBrowderPercentages(ageYears: number) {
   if (ageYears < 5) {
     // Age 1-4 years - similar to 1-year pattern
     return {
-      head: 4.5,
+      headAnterior: 4.5,
+      headPosterior: 4.5,
       torsoAnterior: 8,
       torsoPosterior: 8,
       abdomenAnterior: 8,
@@ -79,7 +81,8 @@ export function getLundBrowderPercentages(ageYears: number) {
   if (ageYears < 10) {
     // Age 5-9 years
     return {
-      head: 4.5,
+      headAnterior: 4.5,
+      headPosterior: 4.5,
       torsoAnterior: 8.5,
       torsoPosterior: 8.5,
       abdomenAnterior: 8.5,
@@ -99,7 +102,8 @@ export function getLundBrowderPercentages(ageYears: number) {
   if (ageYears < 15) {
     // Age 10-14 years
     return {
-      head: 4.5,
+      headAnterior: 4.5,
+      headPosterior: 4.5,
       torsoAnterior: 9,
       torsoPosterior: 9,
       abdomenAnterior: 9,
@@ -118,7 +122,8 @@ export function getLundBrowderPercentages(ageYears: number) {
   
   // 15+ years (adult)
   return {
-    head: 4.5,
+    headAnterior: 4.5,
+    headPosterior: 4.5,
     torsoAnterior: 9,
     torsoPosterior: 9,
     abdomenAnterior: 9,
@@ -139,7 +144,8 @@ export function getDefaultBodyAreas(ageYears: number) {
   const percentages = getLundBrowderPercentages(ageYears);
   
   return {
-    head: percentages.head,
+    headAnterior: percentages.headAnterior,
+    headPosterior: percentages.headPosterior,
     torsoAnterior: percentages.torsoAnterior,
     torsoPosterior: percentages.torsoPosterior,
     abdomenAnterior: percentages.abdomenAnterior,

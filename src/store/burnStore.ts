@@ -7,7 +7,8 @@ export interface BurnData {
   location: string;
   servicio: string;
   bodyAreas: {
-    head: number;
+    headAnterior: number;
+    headPosterior: number;
     torsoAnterior: number;
     torsoPosterior: number;
     abdomenAnterior: number;
@@ -44,7 +45,8 @@ const initialData: BurnData = {
   location: '',
   servicio: '',
   bodyAreas: {
-    head: 0,
+    headAnterior: 0,
+    headPosterior: 0,
     torsoAnterior: 0,
     torsoPosterior: 0,
     abdomenAnterior: 0,
