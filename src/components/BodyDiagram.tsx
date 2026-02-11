@@ -19,45 +19,47 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   const isAdult = data.age >= 10;
 
   // Area definitions for adult (10+) with separate anterior and posterior
+  // Each front/back shows half of the total percentage (e.g., 4.5% front + 4.5% back = 9% total)
   const adultAreaDefinitions = {
-    // Front body areas
+    // Front body areas - each shows 50% of total
     head: { label: 'Cabeza', maxValue: 4.5, color: '#fca5a5', side: 'both' },
-    torsoAnterior: { label: 'Tórax Anterior', maxValue: 9, color: '#fbbf24', side: 'front' },
-    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 9, color: '#fbbf24', side: 'front' },
-    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 4.5, color: '#60a5fa', side: 'front' },
-    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 4.5, color: '#60a5fa', side: 'front' },
-    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 9, color: '#34d399', side: 'front' },
-    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 9, color: '#34d399', side: 'front' },
+    torsoAnterior: { label: 'Tórax Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
+    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
+    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 2.25, color: '#60a5fa', side: 'front' },
+    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 2.25, color: '#60a5fa', side: 'front' },
+    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
+    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
     
-    // Back body areas
-    torsoPosterior: { label: 'Tórax Posterior', maxValue: 9, color: '#f97316', side: 'back' },
-    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 9, color: '#f97316', side: 'back' },
-    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 4.5, color: '#60a5fa', side: 'back' },
-    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 4.5, color: '#60a5fa', side: 'back' },
-    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 9, color: '#34d399', side: 'back' },
-    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 9, color: '#34d399', side: 'back' },
+    // Back body areas - each shows 50% of total
+    torsoPosterior: { label: 'Tórax Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
+    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
+    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 2.25, color: '#60a5fa', side: 'back' },
+    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 2.25, color: '#60a5fa', side: 'back' },
+    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
+    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
     
     genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc', side: 'both' },
   };
 
   // Area definitions for children < 10 with front/back - using 1-year-old Lund-Browder percentages
+  // Each front/back shows 50% of total percentage
   const childAreaDefinitions = {
-    // Front body areas
+    // Front body areas - each shows 50% of total
     head: { label: 'Cabeza', maxValue: 4.5, color: '#fca5a5', side: 'both' },
-    torsoAnterior: { label: 'Tórax Anterior', maxValue: 8, color: '#fbbf24', side: 'front' },
-    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 8, color: '#fbbf24', side: 'front' },
-    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
-    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
-    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 6, color: '#34d399', side: 'front' },
-    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 6, color: '#34d399', side: 'front' },
+    torsoAnterior: { label: 'Tórax Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
+    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
+    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 0.75, color: '#60a5fa', side: 'front' },
+    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 0.75, color: '#60a5fa', side: 'front' },
+    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
+    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
     
-    // Back body areas
-    torsoPosterior: { label: 'Tórax Posterior', maxValue: 8, color: '#f97316', side: 'back' },
-    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 8, color: '#f97316', side: 'back' },
-    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
-    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
-    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 6, color: '#34d399', side: 'back' },
-    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 6, color: '#34d399', side: 'back' },
+    // Back body areas - each shows 50% of total
+    torsoPosterior: { label: 'Tórax Posterior', maxValue: 4, color: '#f97316', side: 'back' },
+    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 4, color: '#f97316', side: 'back' },
+    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 0.75, color: '#60a5fa', side: 'back' },
+    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 0.75, color: '#60a5fa', side: 'back' },
+    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
+    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
     
     genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc', side: 'both' },
   };
