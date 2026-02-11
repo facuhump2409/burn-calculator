@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Analgesia para Quemaduras Pediátricas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="number"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus,
+        input[type="time"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 12px 20px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .body-parts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .body-part-option {
+            position: relative;
+        }
+
+        .body-part-option input[type="checkbox"] {
+            display: none;
+        }
+
+        .body-part-option label {
+            display: block;
+            padding: 10px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 400;
+        }
+
+        .body-part-option input[type="checkbox"]:checked + label {
+            background: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-title {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .result-item p {
+            color: #666;
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+
+        .dosage {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning p {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .radio-option {
+                min-width: 100%;
+            }
+
+            .body-parts {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Calculadora de Analgesia para Quemaduras Pediátricas</h1>
+        <p class="subtitle">Sistema de cálculo de dosis de analgésicos para pacientes pediátricos con quemaduras</p>
+
+        <div class="warning">
+            <p><strong>⚠️ Advertencia:</strong> Esta herramienta es solo para fines educativos e informativos. Las dosis calculadas deben ser verificadas por un profesional médico calificado antes de su administración.</p>
+        </div>
+
+        <form id="burnCalculatorForm">
+            <div class="form-section">
+                <h2 class="section-title">Información del Paciente</h2>
+                
+                <div class="form-group">
+                    <label>Rango de Edad:</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="age1" name="age" value="<1" required>
+                            <label for="age1">< 1 año</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="age2" name="age" value="1-5">
+                            <label for="age2">1 - 5 años</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="age3" name="age" value="5-10">
+                            <label for="age3">5 - 10 años</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Peso del Paciente (kg):</label>
+                    <input type="number" id="weight" name="weight" min="2" max="50" step="0.1" required placeholder="Ingrese el peso en kilogramos">
+                </div>
+
+                <div class="form-group">
+                    <label for="accidentTime">Hora del Accidente:</label>
+                    <input type="time" id="accidentTime" name="accidentTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="service">Servicio Hospitalario:</label>
+                    <select id="service" name="service" required>
+                        <option value="">Seleccione un servicio</option>
+                        <option value="emergencia">Emergencia</option>
+                        <option value="uci">UCI Pediátrica</option>
+                        <option value="quemados">Unidad de Quemados</option>
+                        <option value="cirugia">Cirugía Pediátrica</option>
+                        <option value="internacion">Internación General</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Zonas Afectadas por Quemaduras</h2>
+                <div class="form-group">
+                    <label>Seleccione las partes del cuerpo afectadas:</label>
+                    <div class="body-parts">
+                        <div class="body-part-option">
+                            <input type="checkbox" id="head" name="bodyParts" value="head">
+                            <label for="head">Cabeza y Cuello</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="chest" name="bodyParts" value="chest">
+                            <label for="chest">Tórax</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="abdomen" name="bodyParts" value="abdomen">
+                            <label for="abdomen">Abdomen</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="back" name="bodyParts" value="back">
+                            <label for="back">Espalda</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="rightArm" name="bodyParts" value="rightArm">
+                            <label for="rightArm">Brazo Derecho</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="leftArm" name="bodyParts" value="leftArm">
+                            <label for="leftArm">Brazo Izquierdo</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="rightLeg" name="bodyParts" value="rightLeg">
+                            <label for="rightLeg">Pierna Derecha</label>
+                        </div>
+                        <div class="body-part-option">
+                            <input type="checkbox" id="leftLeg" name="bodyParts" value="leftLeg">
+                            <label for="leftLeg">Pierna Izquierda</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">Calcular Dosis de Analgesia</button>
+        </form>
+
+        <div id="results" class="results">
+            <h2 class="result-title">📋 Resultados del Cálculo</h2>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('burnCalculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateDosage();
+        });
+
+        function calculateDosage() {
+            // Get form values
+            const age = document.querySelector('input[name="age"]:checked').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const accidentTime = document.getElementById('accidentTime').value;
+            const service = document.getElementById('service').value;
+            const bodyParts = Array.from(document.querySelectorAll('input[name="bodyParts"]:checked')).map(cb => cb.value);
+
+            // Calculate time since accident
+            const now = new Date();
+            const [hours, minutes] = accidentTime.split(':');
+            const accidentDate = new Date();
+            accidentDate.setHours(parseInt(hours), parseInt(minutes), 0);
+            
+            let timeDiff = (now - accidentDate) / (1000 * 60 * 60); // hours
+            if (timeDiff < 0) {
+                timeDiff += 24; // Accident was yesterday
+            }
+
+            // Age-based dosage adjustments
+            let ageMultiplier = 1.0;
+            let ageGroup = '';
+            if (age === '<1') {
+                ageMultiplier = 0.8;
+                ageGroup = 'menor de 1 año';
+            } else if (age === '1-5') {
+                ageMultiplier = 0.9;
+                ageGroup = '1 a 5 años';
+            } else {
+                ageMultiplier = 1.0;
+                ageGroup = '5 a 10 años';
+            }
+
+            // Calculate medications based on weight and age
+            // Paracetamol (Acetaminophen): 10-15 mg/kg every 4-6 hours
+            const paracetamolDose = (weight * 12 * ageMultiplier).toFixed(1);
+            const paracetamolMax = (weight * 15).toFixed(1);
+            
+            // Ibuprofen: 5-10 mg/kg every 6-8 hours
+            const ibuprofenDose = (weight * 7.5 * ageMultiplier).toFixed(1);
+            const ibuprofenMax = (weight * 10).toFixed(1);
+            
+            // Morphine for severe burns: 0.05-0.1 mg/kg IV every 2-4 hours
+            const morphineDose = (weight * 0.075 * ageMultiplier).toFixed(2);
+            const morphineMax = (weight * 0.1).toFixed(2);
+
+            // Determine pain level based on body parts affected
+            const painLevel = bodyParts.length >= 4 ? 'severo' : bodyParts.length >= 2 ? 'moderado' : 'leve';
+
+            // Create results HTML
+            let resultsHTML = `
+                <div class="result-item">
+                    <h3>Información del Paciente</h3>
+                    <p><strong>Edad:</strong> ${ageGroup}</p>
+                    <p><strong>Peso:</strong> ${weight} kg</p>
+                    <p><strong>Servicio:</strong> ${getServiceName(service)}</p>
+                    <p><strong>Tiempo desde el accidente:</strong> ${timeDiff.toFixed(1)} horas</p>
+                    <p><strong>Nivel estimado de dolor:</strong> ${painLevel.toUpperCase()}</p>
+                    <p><strong>Zonas afectadas:</strong> ${bodyParts.length} (${bodyParts.map(bp => getBodyPartName(bp)).join(', ')})</p>
+                </div>
+
+                <div class="result-item">
+                    <h3>💊 Paracetamol (Primera línea - Dolor Leve a Moderado)</h3>
+                    <p class="dosage">Dosis recomendada: ${paracetamolDose} mg</p>
+                    <p><strong>Dosis máxima:</strong> ${paracetamolMax} mg</p>
+                    <p><strong>Vía:</strong> Oral o IV</p>
+                    <p><strong>Frecuencia:</strong> Cada 4-6 horas</p>
+                    <p><strong>Dosis máxima diaria:</strong> ${(weight * 60).toFixed(1)} mg/día</p>
+                </div>
+
+                <div class="result-item">
+                    <h3>💊 Ibuprofeno (Antiinflamatorio - Dolor Moderado)</h3>
+                    <p class="dosage">Dosis recomendada: ${ibuprofenDose} mg</p>
+                    <p><strong>Dosis máxima:</strong> ${ibuprofenMax} mg</p>
+                    <p><strong>Vía:</strong> Oral</p>
+                    <p><strong>Frecuencia:</strong> Cada 6-8 horas</p>
+                    <p><strong>Dosis máxima diaria:</strong> ${(weight * 40).toFixed(1)} mg/día</p>
+                </div>
+            `;
+
+            // Add morphine only for severe pain
+            if (painLevel === 'severo' || bodyParts.length >= 3) {
+                resultsHTML += `
+                    <div class="result-item">
+                        <h3>💉 Morfina (Opioide - Dolor Severo)</h3>
+                        <p class="dosage">Dosis recomendada: ${morphineDose} mg</p>
+                        <p><strong>Dosis máxima:</strong> ${morphineMax} mg</p>
+                        <p><strong>Vía:</strong> IV (intravenosa)</p>
+                        <p><strong>Frecuencia:</strong> Cada 2-4 horas según necesidad</p>
+                        <p><strong>⚠️ Nota:</strong> Requiere monitoreo continuo de signos vitales y saturación de oxígeno</p>
+                    </div>
+                `;
+            }
+
+            // Add timing recommendations
+            if (timeDiff < 1) {
+                resultsHTML += `
+                    <div class="result-item">
+                        <h3>⏰ Recomendación de Tiempo</h3>
+                        <p>El accidente ocurrió hace menos de 1 hora. Iniciar analgesia inmediatamente.</p>
+                        <p><strong>Prioridad:</strong> URGENTE - Administrar primera dosis ahora</p>
+                    </div>
+                `;
+            } else if (timeDiff < 4) {
+                resultsHTML += `
+                    <div class="result-item">
+                        <h3>⏰ Recomendación de Tiempo</h3>
+                        <p>El accidente ocurrió hace ${timeDiff.toFixed(1)} horas.</p>
+                        <p><strong>Acción:</strong> Evaluar si ya se administró analgesia previa. Ajustar horarios según última dosis.</p>
+                    </div>
+                `;
+            }
+
+            // Add service-specific recommendations
+            resultsHTML += `
+                <div class="result-item">
+                    <h3>🏥 Recomendaciones para ${getServiceName(service)}</h3>
+                    ${getServiceRecommendations(service, painLevel)}
+                </div>
+            `;
+
+            resultsHTML += `
+                <div class="warning">
+                    <p><strong>⚠️ Recordatorio Importante:</strong></p>
+                    <p>• Estas dosis son estimaciones basadas en guías pediátricas estándar</p>
+                    <p>• SIEMPRE verificar con el médico tratante antes de administrar</p>
+                    <p>• Ajustar según respuesta del paciente y comorbilidades</p>
+                    <p>• Monitorear signos vitales, especialmente con opioides</p>
+                    <p>• Considerar alergias y contraindicaciones</p>
+                </div>
+            `;
+
+            document.getElementById('resultsContent').innerHTML = resultsHTML;
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function getBodyPartName(value) {
+            const names = {
+                'head': 'Cabeza y Cuello',
+                'chest': 'Tórax',
+                'abdomen': 'Abdomen',
+                'back': 'Espalda',
+                'rightArm': 'Brazo Derecho',
+                'leftArm': 'Brazo Izquierdo',
+                'rightLeg': 'Pierna Derecha',
+                'leftLeg': 'Pierna Izquierda'
+            };
+            return names[value] || value;
+        }
+
+        function getServiceName(value) {
+            const names = {
+                'emergencia': 'Emergencia',
+                'uci': 'UCI Pediátrica',
+                'quemados': 'Unidad de Quemados',
+                'cirugia': 'Cirugía Pediátrica',
+                'internacion': 'Internación General'
+            };
+            return names[value] || value;
+        }
+
+        function getServiceRecommendations(service, painLevel) {
+            const recommendations = {
+                'emergencia': `
+                    <p>• Establecer acceso IV de ser necesario</p>
+                    <p>• Evaluación rápida de extensión de quemadura (Regla de los 9)</p>
+                    <p>• Iniciar reanimación con fluidos según protocolo</p>
+                    <p>• Considerar derivación a unidad especializada</p>
+                `,
+                'uci': `
+                    <p>• Monitoreo continuo de signos vitales</p>
+                    <p>• Control estricto de dolor cada 2 horas</p>
+                    <p>• Evaluación de sedación si requiere ventilación mecánica</p>
+                    <p>• Protocolo de analgesia multimodal</p>
+                `,
+                'quemados': `
+                    <p>• Aplicar protocolo específico de manejo del dolor en quemados</p>
+                    <p>• Analgesia preventiva antes de curaciones</p>
+                    <p>• Considerar técnicas no farmacológicas complementarias</p>
+                    <p>• Evaluación diaria del área de superficie corporal quemada</p>
+                `,
+                'cirugia': `
+                    <p>• Preparación para posible desbridamiento quirúrgico</p>
+                    <p>• Analgesia preoperatoria adecuada</p>
+                    <p>• Plan de analgesia postoperatoria</p>
+                    <p>• Coordinación con anestesiología pediátrica</p>
+                `,
+                'internacion': `
+                    <p>• Registro horario de administración de analgésicos</p>
+                    <p>• Evaluación regular del dolor (escala FLACC o Wong-Baker)</p>
+                    <p>• Curaciones programadas con analgesia preventiva</p>
+                    <p>• Educación a familiares sobre signos de alarma</p>
+                `
+            };
+            return recommendations[service] || '<p>Seguir protocolo estándar del servicio</p>';
+        }
+    </script>
+</body>
+</html>
