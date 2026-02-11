@@ -28,7 +28,7 @@ export const App: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-blue-600 mb-2">
-            Regla de 3 Pediatrica
+            Regla de 4 Pediatrica
           </h1>
           <p className="text-gray-600">
             Calculadora de Quemaduras Pediátricas
