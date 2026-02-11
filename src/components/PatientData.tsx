@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useBurnStore } from '../store/burnStore';
 
 interface PatientDataProps {
@@ -7,6 +7,16 @@ interface PatientDataProps {
 
 export const PatientData: React.FC<PatientDataProps> = ({ onNext }) => {
   const { data, updateData } = useBurnStore();
+
+  // Set default time to current time on first load
+  useEffect(() => {
+    if (!data.accidentTime) {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      updateData({ accidentTime: `${hours}:${minutes}` });
+    }
+  }, []);
 
   const handleInputChange = (field: string, value: string | number) => {
     updateData({ [field]: value } as Partial<typeof data>);
