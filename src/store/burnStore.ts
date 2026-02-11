@@ -10,10 +10,20 @@ export interface BurnData {
     head: number;
     torsoAnterior: number;
     torsoPosterior: number;
+    abdomenAnterior: number;
+    abdomenPosterior: number;
     rightArm: number;
     leftArm: number;
+    rightArmAnterior: number;
+    leftArmAnterior: number;
+    rightArmPosterior: number;
+    leftArmPosterior: number;
     rightLeg: number;
     leftLeg: number;
+    rightLegAnterior: number;
+    leftLegAnterior: number;
+    rightLegPosterior: number;
+    leftLegPosterior: number;
     genitals: number;
   };
   estimatedBSA: number;
@@ -37,10 +47,20 @@ const initialData: BurnData = {
     head: 0,
     torsoAnterior: 0,
     torsoPosterior: 0,
+    abdomenAnterior: 0,
+    abdomenPosterior: 0,
     rightArm: 0,
     leftArm: 0,
+    rightArmAnterior: 0,
+    leftArmAnterior: 0,
+    rightArmPosterior: 0,
+    leftArmPosterior: 0,
     rightLeg: 0,
     leftLeg: 0,
+    rightLegAnterior: 0,
+    leftLegAnterior: 0,
+    rightLegPosterior: 0,
+    leftLegPosterior: 0,
     genitals: 0,
   },
   estimatedBSA: 0,

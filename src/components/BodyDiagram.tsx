@@ -13,14 +13,36 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   const totalBSA = Object.values(areas).reduce((sum, val) => sum + val, 0);
   const [hoveredArea, setHoveredArea] = useState<string | null>(null);
   const [hoveredValue, setHoveredValue] = useState<number>(0);
+  const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const isInfant = data.age < 5;
+  const isAdult = data.age >= 10;
 
-  // Area definitions for interactive clicking (with SVG coordinates and max percentages)
-  const areaDefinitions = isInfant ? {
-    // 1-year-old diagram areas (more detailed)
-    head: { label: 'Cabeza', maxValue: 19, color: '#fca5a5' },
+  // Area definitions for adult (10+) with separate anterior and posterior
+  const adultAreaDefinitions = {
+    // Front body areas
+    head: { label: 'Cabeza', maxValue: 4.5, color: '#fca5a5', side: 'both' },
+    torsoAnterior: { label: 'Tórax Anterior', maxValue: 9, color: '#fbbf24', side: 'front' },
+    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 9, color: '#fbbf24', side: 'front' },
+    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 4.5, color: '#60a5fa', side: 'front' },
+    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 4.5, color: '#60a5fa', side: 'front' },
+    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 9, color: '#34d399', side: 'front' },
+    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 9, color: '#34d399', side: 'front' },
+    
+    // Back body areas
+    torsoPosterior: { label: 'Tórax Posterior', maxValue: 9, color: '#f97316', side: 'back' },
+    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 9, color: '#f97316', side: 'back' },
+    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 4.5, color: '#60a5fa', side: 'back' },
+    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 4.5, color: '#60a5fa', side: 'back' },
+    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 9, color: '#34d399', side: 'back' },
+    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 9, color: '#34d399', side: 'back' },
+    
+    genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc', side: 'both' },
+  };
+
+  // Simple diagram for children < 10
+  const childAreaDefinitions = {
+    head: { label: 'Cabeza', maxValue: 17, color: '#fca5a5' },
     torsoAnterior: { label: 'Tórax Anterior', maxValue: 13, color: '#fbbf24' },
     torsoPosterior: { label: 'Tórax Posterior', maxValue: 13, color: '#f97316' },
     rightArm: { label: 'Brazo Derecho', maxValue: 6.5, color: '#60a5fa' },
@@ -28,23 +50,14 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     rightLeg: { label: 'Pierna Derecha', maxValue: 16.5, color: '#34d399' },
     leftLeg: { label: 'Pierna Izquierda', maxValue: 16.5, color: '#34d399' },
     genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc' },
-  } : {
-    // 10+ years (adult) diagram areas
-    head: { label: 'Cabeza', maxValue: 9, color: '#fca5a5' },
-    torsoAnterior: { label: 'Tórax Anterior', maxValue: 18, color: '#fbbf24' },
-    torsoPosterior: { label: 'Tórax Posterior', maxValue: 18, color: '#f97316' },
-    rightArm: { label: 'Brazo Derecho', maxValue: 9, color: '#60a5fa' },
-    leftArm: { label: 'Brazo Izquierdo', maxValue: 9, color: '#60a5fa' },
-    rightLeg: { label: 'Pierna Derecha', maxValue: 18, color: '#34d399' },
-    leftLeg: { label: 'Pierna Izquierda', maxValue: 18, color: '#34d399' },
-    genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc' },
   };
 
   const handleAreaClick = (areaKey: string, percentageAtPoint: number) => {
     const currentValue = areas[areaKey as keyof typeof areas];
-    const maxValue = areaDefinitions[areaKey as keyof typeof areaDefinitions]?.maxValue || 10;
+    const maxValue = isAdult 
+      ? adultAreaDefinitions[areaKey as keyof typeof adultAreaDefinitions]?.maxValue || 10
+      : childAreaDefinitions[areaKey as keyof typeof childAreaDefinitions]?.maxValue || 10;
     
-    // Toggle: if already selected at this value, deselect; otherwise set to the calculated value
     const newValue = Math.abs(currentValue - percentageAtPoint) < 0.1 ? 0 : percentageAtPoint;
     updateBodyArea(areaKey as keyof typeof areas, Math.min(newValue, maxValue));
   };
@@ -55,10 +68,11 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     const rect = svgRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     
-    const maxValue = areaDefinitions[areaKey as keyof typeof areaDefinitions]?.maxValue || 10;
+    const maxValue = isAdult
+      ? adultAreaDefinitions[areaKey as keyof typeof adultAreaDefinitions]?.maxValue || 10
+      : childAreaDefinitions[areaKey as keyof typeof childAreaDefinitions]?.maxValue || 10;
     const svgWidth = svgRef.current.clientWidth;
     
-    // Calculate proportional percentage based on cursor position within the SVG
     const proportion = Math.min(Math.max(x / svgWidth, 0), 1);
     const calculatedValue = Math.round(proportion * maxValue * 10) / 10;
     
@@ -84,14 +98,550 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
       head: 0,
       torsoAnterior: 0,
       torsoPosterior: 0,
+      abdomenAnterior: 0,
+      abdomenPosterior: 0,
       rightArm: 0,
       leftArm: 0,
+      rightArmAnterior: 0,
+      leftArmAnterior: 0,
+      rightArmPosterior: 0,
+      leftArmPosterior: 0,
       rightLeg: 0,
       leftLeg: 0,
+      rightLegAnterior: 0,
+      leftLegAnterior: 0,
+      rightLegPosterior: 0,
+      leftLegPosterior: 0,
       genitals: 0,
     };
     updateData({ bodyAreas: empty, estimatedBSA: 0 });
   };
+
+  // Render adult (10+) diagram with front and back views
+  const renderAdultDiagram = () => (
+    <div className="space-y-6">
+      {/* View selector */}
+      <div className="flex gap-2 justify-center mb-4">
+        <button
+          onClick={() => setViewMode('front')}
+          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+            viewMode === 'front'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+          }`}
+        >
+          Vista Frontal
+        </button>
+        <button
+          onClick={() => setViewMode('back')}
+          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+            viewMode === 'back'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+          }`}
+        >
+          Vista Posterior
+        </button>
+      </div>
+
+      {/* Front view */}
+      {viewMode === 'front' && (
+        <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+          <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Frontal</h3>
+          <svg
+            ref={svgRef}
+            viewBox="0 0 400 700"
+            className="w-full max-w-sm mx-auto"
+          >
+            {/* Head */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'head')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('head', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <circle
+                cx="200"
+                cy="60"
+                r="35"
+                fill={hoveredArea === 'head' ? '#fca5a5' : '#fecaca'}
+                stroke={areas.head > 0 ? '#dc2626' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="200" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
+                {hoveredArea === 'head' ? hoveredValue.toFixed(1) : areas.head > 0 ? areas.head.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Torso Anterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'torsoAnterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('torsoAnterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="150"
+                y="110"
+                width="100"
+                height="80"
+                fill={hoveredArea === 'torsoAnterior' ? '#fbbf24' : '#fcd34d'}
+                stroke={areas.torsoAnterior > 0 ? '#d97706' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="200" y="158" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
+                {hoveredArea === 'torsoAnterior' ? hoveredValue.toFixed(1) : areas.torsoAnterior > 0 ? areas.torsoAnterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Abdomen Anterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'abdomenAnterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('abdomenAnterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="150"
+                y="200"
+                width="100"
+                height="75"
+                fill={hoveredArea === 'abdomenAnterior' ? '#fbbf24' : '#fcd34d'}
+                stroke={areas.abdomenAnterior > 0 ? '#d97706' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="200" y="242" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
+                {hoveredArea === 'abdomenAnterior' ? hoveredValue.toFixed(1) : areas.abdomenAnterior > 0 ? areas.abdomenAnterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Right Arm Anterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'rightArmAnterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('rightArmAnterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="70"
+                y="130"
+                width="50"
+                height="140"
+                fill={hoveredArea === 'rightArmAnterior' ? '#60a5fa' : '#93c5fd'}
+                stroke={areas.rightArmAnterior > 0 ? '#0284c7' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="95" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'rightArmAnterior' ? hoveredValue.toFixed(1) : areas.rightArmAnterior > 0 ? areas.rightArmAnterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Left Arm Anterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'leftArmAnterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('leftArmAnterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="280"
+                y="130"
+                width="50"
+                height="140"
+                fill={hoveredArea === 'leftArmAnterior' ? '#60a5fa' : '#93c5fd'}
+                stroke={areas.leftArmAnterior > 0 ? '#0284c7' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="305" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'leftArmAnterior' ? hoveredValue.toFixed(1) : areas.leftArmAnterior > 0 ? areas.leftArmAnterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Right Leg Anterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'rightLegAnterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('rightLegAnterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="150"
+                y="290"
+                width="40"
+                height="150"
+                fill={hoveredArea === 'rightLegAnterior' ? '#34d399' : '#86efac'}
+                stroke={areas.rightLegAnterior > 0 ? '#059669' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="170" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'rightLegAnterior' ? hoveredValue.toFixed(1) : areas.rightLegAnterior > 0 ? areas.rightLegAnterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Left Leg Anterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'leftLegAnterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('leftLegAnterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="210"
+                y="290"
+                width="40"
+                height="150"
+                fill={hoveredArea === 'leftLegAnterior' ? '#34d399' : '#86efac'}
+                stroke={areas.leftLegAnterior > 0 ? '#059669' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="230" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'leftLegAnterior' ? hoveredValue.toFixed(1) : areas.leftLegAnterior > 0 ? areas.leftLegAnterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Genitals */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'genitals')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('genitals', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="180"
+                y="280"
+                width="40"
+                height="12"
+                fill={hoveredArea === 'genitals' ? '#c084fc' : '#e9d5ff'}
+                stroke={areas.genitals > 0 ? '#a855f7' : '#999'}
+                strokeWidth="1"
+              />
+              <text x="200" y="289" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
+                {hoveredArea === 'genitals' ? hoveredValue.toFixed(1) : areas.genitals > 0 ? areas.genitals.toFixed(1) : '?'}%
+              </text>
+            </g>
+          </svg>
+        </div>
+      )}
+
+      {/* Back view */}
+      {viewMode === 'back' && (
+        <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+          <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Posterior</h3>
+          <svg
+            ref={svgRef}
+            viewBox="0 0 400 700"
+            className="w-full max-w-sm mx-auto"
+          >
+            {/* Head (same as front) */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'head')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('head', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <circle
+                cx="200"
+                cy="60"
+                r="35"
+                fill={hoveredArea === 'head' ? '#fca5a5' : '#fecaca'}
+                stroke={areas.head > 0 ? '#dc2626' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="200" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
+                {hoveredArea === 'head' ? hoveredValue.toFixed(1) : areas.head > 0 ? areas.head.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Torso Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'torsoPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('torsoPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="150"
+                y="110"
+                width="100"
+                height="80"
+                fill={hoveredArea === 'torsoPosterior' ? '#f97316' : '#fed7aa'}
+                stroke={areas.torsoPosterior > 0 ? '#c2410c' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="200" y="158" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
+                {hoveredArea === 'torsoPosterior' ? hoveredValue.toFixed(1) : areas.torsoPosterior > 0 ? areas.torsoPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Abdomen Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'abdomenPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('abdomenPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="150"
+                y="200"
+                width="100"
+                height="75"
+                fill={hoveredArea === 'abdomenPosterior' ? '#f97316' : '#fed7aa'}
+                stroke={areas.abdomenPosterior > 0 ? '#c2410c' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="200" y="242" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
+                {hoveredArea === 'abdomenPosterior' ? hoveredValue.toFixed(1) : areas.abdomenPosterior > 0 ? areas.abdomenPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Right Arm Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'rightArmPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('rightArmPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="70"
+                y="130"
+                width="50"
+                height="140"
+                fill={hoveredArea === 'rightArmPosterior' ? '#60a5fa' : '#93c5fd'}
+                stroke={areas.rightArmPosterior > 0 ? '#0284c7' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="95" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'rightArmPosterior' ? hoveredValue.toFixed(1) : areas.rightArmPosterior > 0 ? areas.rightArmPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Left Arm Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'leftArmPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('leftArmPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="280"
+                y="130"
+                width="50"
+                height="140"
+                fill={hoveredArea === 'leftArmPosterior' ? '#60a5fa' : '#93c5fd'}
+                stroke={areas.leftArmPosterior > 0 ? '#0284c7' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="305" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'leftArmPosterior' ? hoveredValue.toFixed(1) : areas.leftArmPosterior > 0 ? areas.leftArmPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Right Leg Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'rightLegPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('rightLegPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="150"
+                y="290"
+                width="40"
+                height="150"
+                fill={hoveredArea === 'rightLegPosterior' ? '#34d399' : '#86efac'}
+                stroke={areas.rightLegPosterior > 0 ? '#059669' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="170" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'rightLegPosterior' ? hoveredValue.toFixed(1) : areas.rightLegPosterior > 0 ? areas.rightLegPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Left Leg Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'leftLegPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('leftLegPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="210"
+                y="290"
+                width="40"
+                height="150"
+                fill={hoveredArea === 'leftLegPosterior' ? '#34d399' : '#86efac'}
+                stroke={areas.leftLegPosterior > 0 ? '#059669' : '#999'}
+                strokeWidth="2"
+              />
+              <text x="230" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
+                {hoveredArea === 'leftLegPosterior' ? hoveredValue.toFixed(1) : areas.leftLegPosterior > 0 ? areas.leftLegPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+
+  // Render simple child diagram (< 10 years)
+  const renderChildDiagram = () => (
+    <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+      <svg
+        ref={svgRef}
+        viewBox="0 0 400 600"
+        className="w-full max-w-md mx-auto"
+      >
+        {/* Head */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'head')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('head', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <circle
+            cx="200"
+            cy="80"
+            r="40"
+            fill={hoveredArea === 'head' ? '#fca5a5' : '#fecaca'}
+            stroke={areas.head > 0 ? '#dc2626' : '#999'}
+            strokeWidth="2"
+          />
+          <text x="200" y="85" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#000">
+            {hoveredArea === 'head' ? hoveredValue.toFixed(1) : areas.head > 0 ? areas.head.toFixed(1) : '?'}%
+          </text>
+        </g>
+
+        {/* Torso Anterior */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'torsoAnterior')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('torsoAnterior', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <rect
+            x="150"
+            y="140"
+            width="100"
+            height="100"
+            fill={hoveredArea === 'torsoAnterior' ? '#fbbf24' : '#fcd34d'}
+            stroke={areas.torsoAnterior > 0 ? '#d97706' : '#999'}
+            strokeWidth="2"
+          />
+          <text x="200" y="195" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#000">
+            {hoveredArea === 'torsoAnterior' ? hoveredValue.toFixed(1) : areas.torsoAnterior > 0 ? areas.torsoAnterior.toFixed(1) : '?'}%
+          </text>
+        </g>
+
+        {/* Right Arm */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'rightArm')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('rightArm', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <rect
+            x="70"
+            y="160"
+            width="60"
+            height="100"
+            fill={hoveredArea === 'rightArm' ? '#60a5fa' : '#93c5fd'}
+            stroke={areas.rightArm > 0 ? '#0284c7' : '#999'}
+            strokeWidth="2"
+          />
+          <text x="100" y="215" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
+            {hoveredArea === 'rightArm' ? hoveredValue.toFixed(1) : areas.rightArm > 0 ? areas.rightArm.toFixed(1) : '?'}%
+          </text>
+        </g>
+
+        {/* Left Arm */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'leftArm')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('leftArm', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <rect
+            x="270"
+            y="160"
+            width="60"
+            height="100"
+            fill={hoveredArea === 'leftArm' ? '#60a5fa' : '#93c5fd'}
+            stroke={areas.leftArm > 0 ? '#0284c7' : '#999'}
+            strokeWidth="2"
+          />
+          <text x="300" y="215" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
+            {hoveredArea === 'leftArm' ? hoveredValue.toFixed(1) : areas.leftArm > 0 ? areas.leftArm.toFixed(1) : '?'}%
+          </text>
+        </g>
+
+        {/* Right Leg */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'rightLeg')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('rightLeg', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <rect
+            x="155"
+            y="270"
+            width="40"
+            height="120"
+            fill={hoveredArea === 'rightLeg' ? '#34d399' : '#86efac'}
+            stroke={areas.rightLeg > 0 ? '#059669' : '#999'}
+            strokeWidth="2"
+          />
+          <text x="175" y="340" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
+            {hoveredArea === 'rightLeg' ? hoveredValue.toFixed(1) : areas.rightLeg > 0 ? areas.rightLeg.toFixed(1) : '?'}%
+          </text>
+        </g>
+
+        {/* Left Leg */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'leftLeg')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('leftLeg', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <rect
+            x="205"
+            y="270"
+            width="40"
+            height="120"
+            fill={hoveredArea === 'leftLeg' ? '#34d399' : '#86efac'}
+            stroke={areas.leftLeg > 0 ? '#059669' : '#999'}
+            strokeWidth="2"
+          />
+          <text x="225" y="340" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
+            {hoveredArea === 'leftLeg' ? hoveredValue.toFixed(1) : areas.leftLeg > 0 ? areas.leftLeg.toFixed(1) : '?'}%
+          </text>
+        </g>
+
+        {/* Genitals */}
+        <g
+          onMouseMove={(e) => handleSvgMouseMove(e, 'genitals')}
+          onMouseLeave={handleSvgMouseLeave}
+          onClick={() => handleAreaClick('genitals', hoveredValue)}
+          className="cursor-pointer hover:opacity-75 transition-opacity"
+        >
+          <rect
+            x="180"
+            y="255"
+            width="40"
+            height="12"
+            fill={hoveredArea === 'genitals' ? '#c084fc' : '#e9d5ff'}
+            stroke={areas.genitals > 0 ? '#a855f7' : '#999'}
+            strokeWidth="1"
+          />
+          <text x="200" y="264" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
+            {hoveredArea === 'genitals' ? hoveredValue.toFixed(1) : areas.genitals > 0 ? areas.genitals.toFixed(1) : '?'}%
+          </text>
+        </g>
+      </svg>
+      <p className="text-center text-xs text-gray-600 mt-4">
+        Diagrama Lund-Browder para menores de 10 años
+      </p>
+    </div>
+  );
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -105,187 +655,14 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
           Los valores se calcularán automáticamente según donde hagas clic. Si marcas solo parte de una sección, verás un porcentaje proporcional.
         </p>
         <p className="text-xs text-gray-600">
-          Por ejemplo: si marcas solo la mitad del tórax (8%), verás ~4%.
+          {isAdult && 'Para mayores de 10 años: selecciona vista frontal o posterior para marcar ambas caras del cuerpo.'}
         </p>
       </div>
 
-      {/* Interactive SVG Diagram */}
-      <div className="bg-white p-6 rounded-lg border-2 border-gray-300 mb-6">
-        <svg
-          ref={svgRef}
-          viewBox="0 0 400 600"
-          className="w-full max-w-md mx-auto"
-        >
-          {/* Head */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'head')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('head', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <circle
-              cx="200"
-              cy="80"
-              r="40"
-              fill={hoveredArea === 'head' ? '#fca5a5' : '#fecaca'}
-              stroke={areas.head > 0 ? '#dc2626' : '#999'}
-              strokeWidth="2"
-            />
-            <text x="200" y="85" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#000">
-              {hoveredArea === 'head' ? hoveredValue.toFixed(1) : areas.head > 0 ? areas.head.toFixed(1) : '?'}%
-            </text>
-          </g>
+      {/* Diagram section */}
+      {isAdult ? renderAdultDiagram() : renderChildDiagram()}
 
-          {/* Torso Anterior */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'torsoAnterior')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('torsoAnterior', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <rect
-              x="150"
-              y="140"
-              width="100"
-              height="100"
-              fill={hoveredArea === 'torsoAnterior' ? '#fbbf24' : '#fcd34d'}
-              stroke={areas.torsoAnterior > 0 ? '#d97706' : '#999'}
-              strokeWidth="2"
-            />
-            <text x="200" y="195" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#000">
-              {hoveredArea === 'torsoAnterior' ? hoveredValue.toFixed(1) : areas.torsoAnterior > 0 ? areas.torsoAnterior.toFixed(1) : '?'}%
-            </text>
-          </g>
-
-          {/* Right Arm */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'rightArm')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('rightArm', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <rect
-              x="70"
-              y="160"
-              width="60"
-              height="100"
-              fill={hoveredArea === 'rightArm' ? '#60a5fa' : '#93c5fd'}
-              stroke={areas.rightArm > 0 ? '#0284c7' : '#999'}
-              strokeWidth="2"
-            />
-            <text x="100" y="215" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-              {hoveredArea === 'rightArm' ? hoveredValue.toFixed(1) : areas.rightArm > 0 ? areas.rightArm.toFixed(1) : '?'}%
-            </text>
-          </g>
-
-          {/* Left Arm */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'leftArm')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('leftArm', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <rect
-              x="270"
-              y="160"
-              width="60"
-              height="100"
-              fill={hoveredArea === 'leftArm' ? '#60a5fa' : '#93c5fd'}
-              stroke={areas.leftArm > 0 ? '#0284c7' : '#999'}
-              strokeWidth="2"
-            />
-            <text x="300" y="215" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-              {hoveredArea === 'leftArm' ? hoveredValue.toFixed(1) : areas.leftArm > 0 ? areas.leftArm.toFixed(1) : '?'}%
-            </text>
-          </g>
-
-          {/* Right Leg */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'rightLeg')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('rightLeg', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <rect
-              x="155"
-              y="270"
-              width="40"
-              height="120"
-              fill={hoveredArea === 'rightLeg' ? '#34d399' : '#86efac'}
-              stroke={areas.rightLeg > 0 ? '#059669' : '#999'}
-              strokeWidth="2"
-            />
-            <text x="175" y="340" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-              {hoveredArea === 'rightLeg' ? hoveredValue.toFixed(1) : areas.rightLeg > 0 ? areas.rightLeg.toFixed(1) : '?'}%
-            </text>
-          </g>
-
-          {/* Left Leg */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'leftLeg')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('leftLeg', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <rect
-              x="205"
-              y="270"
-              width="40"
-              height="120"
-              fill={hoveredArea === 'leftLeg' ? '#34d399' : '#86efac'}
-              stroke={areas.leftLeg > 0 ? '#059669' : '#999'}
-              strokeWidth="2"
-            />
-            <text x="225" y="340" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-              {hoveredArea === 'leftLeg' ? hoveredValue.toFixed(1) : areas.leftLeg > 0 ? areas.leftLeg.toFixed(1) : '?'}%
-            </text>
-          </g>
-
-          {/* Genitals */}
-          <g
-            onMouseMove={(e) => handleSvgMouseMove(e, 'genitals')}
-            onMouseLeave={handleSvgMouseLeave}
-            onClick={() => handleAreaClick('genitals', hoveredValue)}
-            className="cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            <rect
-              x="180"
-              y="255"
-              width="40"
-              height="12"
-              fill={hoveredArea === 'genitals' ? '#c084fc' : '#e9d5ff'}
-              stroke={areas.genitals > 0 ? '#a855f7' : '#999'}
-              strokeWidth="1"
-            />
-            <text x="200" y="264" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
-              {hoveredArea === 'genitals' ? hoveredValue.toFixed(1) : areas.genitals > 0 ? areas.genitals.toFixed(1) : '?'}%
-            </text>
-          </g>
-
-          {/* Posterior Body (hidden, shown as reference) */}
-          <g opacity="0.3">
-            <rect
-              x="150"
-              y="140"
-              width="100"
-              height="100"
-              fill="none"
-              stroke="#666"
-              strokeWidth="1"
-              strokeDasharray="5,5"
-            />
-            <text x="200" y="125" textAnchor="middle" fontSize="10" fill="#666">
-              Posterior
-            </text>
-          </g>
-        </svg>
-
-        <p className="text-center text-xs text-gray-600 mt-4">
-          {isInfant ? 'Diagrama Lund-Browder para menores de 5 años' : 'Diagrama para mayores de 10 años'}
-        </p>
-      </div>
-
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg mb-6 border-2 border-blue-200">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg mb-6 border-2 border-blue-200 mt-6">
         <p className="text-center text-lg font-bold text-blue-700 mb-3">
           Total: {totalBSA.toFixed(1)}% de SCQ
         </p>
