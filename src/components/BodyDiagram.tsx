@@ -129,6 +129,19 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     updateData({ bodyAreas: empty, estimatedBSA: 0 });
   };
 
+  const handleDirectInput = (areaKey: string, value: string) => {
+    const numValue = parseFloat(value) || 0;
+    const maxValue = isAdult
+      ? adultAreaDefinitions[areaKey as keyof typeof adultAreaDefinitions]?.maxValue || 10
+      : childAreaDefinitions[areaKey as keyof typeof childAreaDefinitions]?.maxValue || 10;
+    
+    const clampedValue = Math.min(Math.max(numValue, 0), maxValue);
+    updateBodyArea(areaKey as keyof typeof areas, clampedValue);
+  };
+
+  const getAreaDefinitions = () => isAdult ? adultAreaDefinitions : childAreaDefinitions;
+  const areaDefs = getAreaDefinitions();
+
   // Render diagram with front and back views
   const renderBodyDiagram = () => (
     <div className="space-y-6">
@@ -510,6 +523,38 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
         <p className="text-xs text-gray-600">
           {isAdult && 'Para mayores de 10 años: selecciona vista frontal o posterior para marcar ambas caras del cuerpo.'}
         </p>
+      </div>
+
+      {/* Direct Input Fields */}
+      <div className="bg-gray-50 p-6 rounded-lg mb-6 border border-gray-300">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">Especificar Porcentajes Directamente</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Object.entries(areaDefs).map(([key, def]) => (
+            <div key={key} className="flex flex-col">
+              <label className="text-sm font-semibold text-gray-700 mb-1">
+                {def.label}
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  max={def.maxValue}
+                  step="0.1"
+                  value={areas[key as keyof typeof areas] || ''}
+                  onChange={(e) => handleDirectInput(key, e.target.value)}
+                  className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="0"
+                />
+                <span className="text-xs text-gray-600 w-8">
+                  /{def.maxValue.toFixed(1)}
+                </span>
+              </div>
+              {areas[key as keyof typeof areas] > def.maxValue && (
+                <p className="text-xs text-red-600 mt-1">Excede máximo</p>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Diagram section - Front/Back view for all ages */}
