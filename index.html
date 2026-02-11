@@ -380,6 +380,12 @@
     </div>
 
     <script>
+        // Clinical constants for pain level assessment
+        const PAIN_LEVEL_THRESHOLDS = {
+            SEVERE: 4,      // 4 or more body parts affected = severe pain
+            MODERATE: 2     // 2-3 body parts = moderate pain, less than 2 = mild
+        };
+
         document.getElementById('burnCalculatorForm').addEventListener('submit', function(e) {
             e.preventDefault();
             calculateDosage();
@@ -432,7 +438,8 @@
             const morphineMax = (weight * 0.1).toFixed(2);
 
             // Determine pain level based on body parts affected
-            const painLevel = bodyParts.length >= 4 ? 'severo' : bodyParts.length >= 2 ? 'moderado' : 'leve';
+            const painLevel = bodyParts.length >= PAIN_LEVEL_THRESHOLDS.SEVERE ? 'severo' : 
+                              bodyParts.length >= PAIN_LEVEL_THRESHOLDS.MODERATE ? 'moderado' : 'leve';
 
             // Create results HTML
             let resultsHTML = `
@@ -465,8 +472,8 @@
                 </div>
             `;
 
-            // Add morphine only for severe pain
-            if (painLevel === 'severo' || bodyParts.length >= 3) {
+            // Add morphine only for severe pain (4 or more body parts affected)
+            if (painLevel === 'severo') {
                 resultsHTML += `
                     <div class="result-item">
                         <h3>💉 Morfina (Opioide - Dolor Severo)</h3>
