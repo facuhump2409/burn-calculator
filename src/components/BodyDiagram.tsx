@@ -29,6 +29,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 2.25, color: '#60a5fa', side: 'front' },
     rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
     leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
+    genitalAnterior: { label: 'Genitales Anterior', maxValue: 0.5, color: '#c084fc', side: 'front' },
     
     // Back body areas - each shows 50% of total
     headPosterior: { label: 'Cabeza Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
@@ -38,8 +39,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 2.25, color: '#60a5fa', side: 'back' },
     rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
     leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
-    
-    genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc', side: 'both' },
+    genitalPosterior: { label: 'Genitales Posterior', maxValue: 0.5, color: '#c084fc', side: 'back' },
   };
 
   // Area definitions for children < 10 with front/back - using 1-year-old Lund-Browder percentages
@@ -53,6 +53,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 0.75, color: '#60a5fa', side: 'front' },
     rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
     leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
+    genitalAnterior: { label: 'Genitales Anterior', maxValue: 0.5, color: '#c084fc', side: 'front' },
     
     // Back body areas - each shows 50% of total
     headPosterior: { label: 'Cabeza Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
@@ -62,8 +63,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 0.75, color: '#60a5fa', side: 'back' },
     rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
     leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
-    
-    genitals: { label: 'Genitales', maxValue: 1, color: '#c084fc', side: 'both' },
+    genitalPosterior: { label: 'Genitales Posterior', maxValue: 0.5, color: '#c084fc', side: 'back' },
   };
 
   const handleAreaClick = (areaKey: string, percentageAtPoint: number) => {
@@ -115,19 +115,16 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
       torsoPosterior: 0,
       abdomenAnterior: 0,
       abdomenPosterior: 0,
-      rightArm: 0,
-      leftArm: 0,
       rightArmAnterior: 0,
       leftArmAnterior: 0,
       rightArmPosterior: 0,
       leftArmPosterior: 0,
-      rightLeg: 0,
-      leftLeg: 0,
       rightLegAnterior: 0,
       leftLegAnterior: 0,
       rightLegPosterior: 0,
       leftLegPosterior: 0,
-      genitals: 0,
+      genitalAnterior: 0,
+      genitalPosterior: 0,
     };
     updateData({ bodyAreas: empty, estimatedBSA: 0 });
   };
@@ -327,11 +324,11 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
               </text>
             </g>
 
-            {/* Genitals */}
+            {/* Genitals Anterior */}
             <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'genitals')}
+              onMouseMove={(e) => handleSvgMouseMove(e, 'genitalAnterior')}
               onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('genitals', hoveredValue)}
+              onClick={() => handleAreaClick('genitalAnterior', hoveredValue)}
               className="cursor-pointer hover:opacity-75 transition-opacity"
             >
               <rect
@@ -339,12 +336,12 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
                 y="280"
                 width="40"
                 height="12"
-                fill={hoveredArea === 'genitals' ? '#c084fc' : '#e9d5ff'}
-                stroke={areas.genitals > 0 ? '#a855f7' : '#999'}
+                fill={hoveredArea === 'genitalAnterior' ? '#c084fc' : '#e9d5ff'}
+                stroke={areas.genitalAnterior > 0 ? '#a855f7' : '#999'}
                 strokeWidth="1"
               />
               <text x="200" y="289" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
-                {hoveredArea === 'genitals' ? hoveredValue.toFixed(1) : areas.genitals > 0 ? areas.genitals.toFixed(1) : '?'}%
+                {hoveredArea === 'genitalAnterior' ? hoveredValue.toFixed(1) : areas.genitalAnterior > 0 ? areas.genitalAnterior.toFixed(1) : '?'}%
               </text>
             </g>
           </svg>
@@ -503,6 +500,27 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
               />
               <text x="230" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
                 {hoveredArea === 'leftLegPosterior' ? hoveredValue.toFixed(1) : areas.leftLegPosterior > 0 ? areas.leftLegPosterior.toFixed(1) : '?'}%
+              </text>
+            </g>
+
+            {/* Genitals Posterior */}
+            <g
+              onMouseMove={(e) => handleSvgMouseMove(e, 'genitalPosterior')}
+              onMouseLeave={handleSvgMouseLeave}
+              onClick={() => handleAreaClick('genitalPosterior', hoveredValue)}
+              className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+              <rect
+                x="180"
+                y="280"
+                width="40"
+                height="12"
+                fill={hoveredArea === 'genitalPosterior' ? '#c084fc' : '#e9d5ff'}
+                stroke={areas.genitalPosterior > 0 ? '#a855f7' : '#999'}
+                strokeWidth="1"
+              />
+              <text x="200" y="289" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
+                {hoveredArea === 'genitalPosterior' ? hoveredValue.toFixed(1) : areas.genitalPosterior > 0 ? areas.genitalPosterior.toFixed(1) : '?'}%
               </text>
             </g>
           </svg>

@@ -92,23 +92,27 @@ export const ClinicalSummary: React.FC<ClinicalSummaryProps> = ({ onBack, onRese
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Brazo Derecho</p>
-              <p className="font-bold text-lg">{data.bodyAreas.rightArm.toFixed(1)}%</p>
+              <p className="font-bold text-lg">{(data.bodyAreas.rightArmAnterior + data.bodyAreas.rightArmPosterior).toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Brazo Izquierdo</p>
-              <p className="font-bold text-lg">{data.bodyAreas.leftArm.toFixed(1)}%</p>
+              <p className="font-bold text-lg">{(data.bodyAreas.leftArmAnterior + data.bodyAreas.leftArmPosterior).toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Pierna Derecha</p>
-              <p className="font-bold text-lg">{data.bodyAreas.rightLeg.toFixed(1)}%</p>
+              <p className="font-bold text-lg">{(data.bodyAreas.rightLegAnterior + data.bodyAreas.rightLegPosterior).toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Pierna Izquierda</p>
-              <p className="font-bold text-lg">{data.bodyAreas.leftLeg.toFixed(1)}%</p>
+              <p className="font-bold text-lg">{(data.bodyAreas.leftLegAnterior + data.bodyAreas.leftLegPosterior).toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
-              <p className="text-gray-600">Genitales</p>
-              <p className="font-bold text-lg">{data.bodyAreas.genitals.toFixed(1)}%</p>
+              <p className="text-gray-600">Genitales Anterior</p>
+              <p className="font-bold text-lg">{data.bodyAreas.genitalAnterior.toFixed(1)}%</p>
+            </div>
+            <div className="bg-white p-3 rounded">
+              <p className="text-gray-600">Genitales Posterior</p>
+              <p className="font-bold text-lg">{data.bodyAreas.genitalPosterior.toFixed(1)}%</p>
             </div>
           </div>
         </div>

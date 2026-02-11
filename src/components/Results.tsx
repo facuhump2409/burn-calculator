@@ -88,15 +88,19 @@ export const Results: React.FC<ResultsProps> = ({ onNext, onBack }) => {
           </div>
           <div className="bg-blue-50 p-3 rounded border border-blue-200">
             <p className="text-xs text-gray-600">Brazos</p>
-            <p className="text-lg font-bold text-blue-600">{(data.bodyAreas.rightArm + data.bodyAreas.leftArm).toFixed(1)}%</p>
+            <p className="text-lg font-bold text-blue-600">{(data.bodyAreas.rightArmAnterior + data.bodyAreas.leftArmAnterior + data.bodyAreas.rightArmPosterior + data.bodyAreas.leftArmPosterior).toFixed(1)}%</p>
           </div>
           <div className="bg-green-50 p-3 rounded border border-green-200">
             <p className="text-xs text-gray-600">Piernas</p>
-            <p className="text-lg font-bold text-green-600">{(data.bodyAreas.rightLeg + data.bodyAreas.leftLeg).toFixed(1)}%</p>
+            <p className="text-lg font-bold text-green-600">{(data.bodyAreas.rightLegAnterior + data.bodyAreas.leftLegAnterior + data.bodyAreas.rightLegPosterior + data.bodyAreas.leftLegPosterior).toFixed(1)}%</p>
           </div>
           <div className="bg-purple-50 p-3 rounded border border-purple-200">
-            <p className="text-xs text-gray-600">Genitales</p>
-            <p className="text-lg font-bold text-purple-600">{data.bodyAreas.genitals.toFixed(1)}%</p>
+            <p className="text-xs text-gray-600">Genitales Anterior</p>
+            <p className="text-lg font-bold text-purple-600">{data.bodyAreas.genitalAnterior.toFixed(1)}%</p>
+          </div>
+          <div className="bg-purple-100 p-3 rounded border border-purple-300">
+            <p className="text-xs text-gray-600">Genitales Posterior</p>
+            <p className="text-lg font-bold text-purple-700">{data.bodyAreas.genitalPosterior.toFixed(1)}%</p>
           </div>
         </div>
       </div>

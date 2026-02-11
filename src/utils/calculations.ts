@@ -53,7 +53,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 6,
       rightLegPosterior: 6,
       leftLegPosterior: 6,
-      genitals: 1,
+      genitalAnterior: 0.5,
+      genitalPosterior: 0.5,
     };
   }
   
@@ -74,7 +75,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 6.5,
       rightLegPosterior: 6.5,
       leftLegPosterior: 6.5,
-      genitals: 1,
+      genitalAnterior: 0.5,
+      genitalPosterior: 0.5,
     };
   }
   
@@ -95,7 +97,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 8,
       rightLegPosterior: 8,
       leftLegPosterior: 8,
-      genitals: 1,
+      genitalAnterior: 0.5,
+      genitalPosterior: 0.5,
     };
   }
   
@@ -116,7 +119,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 9,
       rightLegPosterior: 9,
       leftLegPosterior: 9,
-      genitals: 1,
+      genitalAnterior: 0.5,
+      genitalPosterior: 0.5,
     };
   }
   
@@ -136,7 +140,8 @@ export function getLundBrowderPercentages(ageYears: number) {
     leftLegAnterior: 9,
     rightLegPosterior: 9,
     leftLegPosterior: 9,
-    genitals: 1,
+    genitalAnterior: 0.5,
+    genitalPosterior: 0.5,
   };
 }
 
@@ -158,11 +163,7 @@ export function getDefaultBodyAreas(ageYears: number) {
     leftLegAnterior: percentages.leftLegAnterior,
     rightLegPosterior: percentages.rightLegPosterior,
     leftLegPosterior: percentages.leftLegPosterior,
-    genitals: percentages.genitals,
-    // Legacy properties for backward compatibility (set to 0)
-    rightArm: 0,
-    leftArm: 0,
-    rightLeg: 0,
-    leftLeg: 0,
+    genitalAnterior: percentages.genitalAnterior,
+    genitalPosterior: percentages.genitalPosterior,
   };
 }
