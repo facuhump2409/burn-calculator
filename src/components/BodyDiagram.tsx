@@ -131,7 +131,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   };
 
   const renderChildFrontView = () => (
-    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-lg mx-auto">
       {/* Head - split left/right */}
       {renderSVGArea('headLeftAnterior', 'circle', { cx: 180, cy: 60, r: 25 }, 11)}
       {renderSVGArea('headRightAnterior', 'circle', { cx: 220, cy: 60, r: 25 }, 11)}
@@ -167,7 +167,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   );
 
   const renderChildBackView = () => (
-    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-lg mx-auto">
       {/* Head - split left/right */}
       {renderSVGArea('headLeftPosterior', 'circle', { cx: 180, cy: 60, r: 25 }, 11)}
       {renderSVGArea('headRightPosterior', 'circle', { cx: 220, cy: 60, r: 25 }, 11)}
@@ -203,7 +203,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   );
 
   const renderAdultFrontView = () => (
-    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-lg mx-auto">
       {/* Head */}
       {renderSVGArea('headAnterior', 'circle', { cx: 200, cy: 60, r: 35 }, 14)}
       
@@ -238,7 +238,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   );
 
   const renderAdultBackView = () => (
-    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-lg mx-auto">
       {/* Head */}
       {renderSVGArea('headPosterior', 'circle', { cx: 200, cy: 60, r: 35 }, 14)}
       
@@ -274,7 +274,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Mapa Interactivo de Área Quemada
         <span className="text-sm text-blue-600 ml-2">(Subdivisiones detalladas)</span>
       </h2>
@@ -398,7 +398,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
 
         {/* Front view */}
         {viewMode === 'front' && (
-          <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+          <div className="bg-white p-6 rounded-lg border-2 border-gray-300 flex flex-col items-center">
             <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Frontal</h3>
             {isChild ? renderChildFrontView() : renderAdultFrontView()}
           </div>
@@ -406,7 +406,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
 
         {/* Back view */}
         {viewMode === 'back' && (
-          <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+          <div className="bg-white p-6 rounded-lg border-2 border-gray-300 flex flex-col items-center">
             <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Posterior</h3>
             {isChild ? renderChildBackView() : renderAdultBackView()}
           </div>

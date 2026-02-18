@@ -26,12 +26,15 @@ export const PatientData: React.FC<PatientDataProps> = ({ onNext }) => {
     const wasChild = prevAge < 10;
     const isChild = data.age < 10;
     
-    // If age crossed the threshold, reset body areas to defaults
+    // If age crossed the threshold, reset body areas to 0 to avoid auto-filling max values
     if (wasChild !== isChild && data.age > 0) {
-      const defaults = getDefaultBodyAreas(data.age);
-      updateData({ 
-        bodyAreas: defaults,
-        estimatedBSA: Object.values(defaults).reduce((sum, val) => sum + val, 0)
+      const empty = getDefaultBodyAreas(data.age);
+      Object.keys(empty).forEach((key) => {
+        (empty as Record<string, number>)[key] = 0;
+      });
+      updateData({
+        bodyAreas: empty,
+        estimatedBSA: 0,
       });
     }
     
