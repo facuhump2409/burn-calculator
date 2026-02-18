@@ -165,3 +165,23 @@ When modifying the body area tracking (e.g., removing genitals, changing subdivi
   - **Adults (10+ years):** Single head area
   - **All ages:** Arms split into hand/forearm/upper arm; Legs split into foot/lower leg/thigh
   - Torso and abdomen split into left/right for both anterior/posterior
+
+## Additional Findings (Feb 2026)
+
+### Tooling Updates
+- **Vite upgraded to 7.3.1** to resolve the esbuild dev-server vulnerability; note Vite 7 requires **Node >= 20.19**.
+- **Vitest added** with `npm test` (uses `vitest run`) for regression checks.
+- **GitHub Actions CI** added at `.github/workflows/ci.yml` to run `npm test` on pushes and PRs to `master`.
+
+### Percentage Validation Tests
+- New tests in `src/utils/percentages.test.ts` validate both the **diagram max values** and **calculation tables** against AGENTS.md.
+- Diagram totals match AGENTS.md by adding a **posterior remainder** entry in `src/utils/bodyAreaDefinitions.ts`:
+  - Child: +2.0% (posterior)
+  - Adult: +1.0% (posterior)
+  - These are marked `includeInUI: false` so they do **not** appear in the direct-input UI or diagram.
+
+### Shared Graph Definitions
+- Diagram max values are now centralized in `src/utils/bodyAreaDefinitions.ts` and imported by `BodyDiagram.tsx`.
+
+### Build Note
+- A build failed due to an unused `labelX` variable; removed to satisfy `noUnusedLocals`.
