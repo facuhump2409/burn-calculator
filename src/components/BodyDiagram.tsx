@@ -143,6 +143,8 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
       {/* Abdomen - split left/right */}
       {renderSVGArea('abdomenLeftAnterior', 'rect', { x: 155, y: 175, width: 45, height: 65 }, 10)}
       {renderSVGArea('abdomenRightAnterior', 'rect', { x: 200, y: 175, width: 45, height: 65 }, 10)}
+
+      {renderSVGArea('genitalAnterior', 'rect', { x: 187, y: 240, width: 26, height: 12 }, 9)}
       
       {/* Right arm - hand, forearm, upper arm */}
       {renderSVGArea('rightHandAnterior', 'rect', { x: 75, y: 235, width: 35, height: 30 }, 9)}
@@ -179,6 +181,8 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
       {/* Abdomen/buttocks - split left/right */}
       {renderSVGArea('abdomenLeftPosterior', 'rect', { x: 155, y: 175, width: 45, height: 65 }, 10)}
       {renderSVGArea('abdomenRightPosterior', 'rect', { x: 200, y: 175, width: 45, height: 65 }, 10)}
+
+      {renderSVGArea('genitalPosterior', 'rect', { x: 187, y: 240, width: 26, height: 12 }, 9)}
       
       {/* Right arm - hand, forearm, upper arm */}
       {renderSVGArea('rightHandPosterior', 'rect', { x: 75, y: 235, width: 35, height: 30 }, 9)}
@@ -214,6 +218,8 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
       {/* Abdomen - split left/right */}
       {renderSVGArea('abdomenLeftAnterior', 'rect', { x: 150, y: 200, width: 50, height: 75 }, 11)}
       {renderSVGArea('abdomenRightAnterior', 'rect', { x: 200, y: 200, width: 50, height: 75 }, 11)}
+
+      {renderSVGArea('genitalAnterior', 'rect', { x: 187, y: 275, width: 26, height: 12 }, 9)}
       
       {/* Right arm - hand, forearm, upper arm */}
       {renderSVGArea('rightHandAnterior', 'rect', { x: 70, y: 235, width: 35, height: 30 }, 10)}
@@ -249,6 +255,8 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
       {/* Abdomen/buttocks - split left/right */}
       {renderSVGArea('abdomenLeftPosterior', 'rect', { x: 150, y: 200, width: 50, height: 75 }, 11)}
       {renderSVGArea('abdomenRightPosterior', 'rect', { x: 200, y: 200, width: 50, height: 75 }, 11)}
+
+      {renderSVGArea('genitalPosterior', 'rect', { x: 187, y: 275, width: 26, height: 12 }, 9)}
       
       {/* Right arm - hand, forearm, upper arm */}
       {renderSVGArea('rightHandPosterior', 'rect', { x: 70, y: 235, width: 35, height: 30 }, 10)}

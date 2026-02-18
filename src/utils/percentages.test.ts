@@ -61,8 +61,11 @@ describe('Body diagram percentages (AGENTS.md)', () => {
     expect(sumMaxValues(['rightFootAnterior', 'leftFootAnterior'], defs)).toBeCloseTo(3, 5);
     expect(sumMaxValues(['rightFootPosterior', 'leftFootPosterior'], defs)).toBeCloseTo(3, 5);
 
-    expect(sumBySide('front', defs)).toBeCloseTo(49, 5);
-    expect(sumBySide('back', defs)).toBeCloseTo(51, 5);
+    expect(sumMaxValues(['genitalAnterior'], defs)).toBeCloseTo(1, 5);
+    expect(sumMaxValues(['genitalPosterior'], defs)).toBeCloseTo(1, 5);
+
+    expect(sumBySide('front', defs)).toBeCloseTo(50, 5);
+    expect(sumBySide('back', defs)).toBeCloseTo(50, 5);
   });
 
   it('matches adult (10+) percentages for the graph', () => {
@@ -113,8 +116,11 @@ describe('Body diagram percentages (AGENTS.md)', () => {
     expect(sumMaxValues(['rightFootAnterior', 'leftFootAnterior'], defs)).toBeCloseTo(3, 5);
     expect(sumMaxValues(['rightFootPosterior', 'leftFootPosterior'], defs)).toBeCloseTo(3, 5);
 
-    expect(sumBySide('front', defs)).toBeCloseTo(49.5, 5);
-    expect(sumBySide('back', defs)).toBeCloseTo(50.5, 5);
+    expect(sumMaxValues(['genitalAnterior'], defs)).toBeCloseTo(0.5, 5);
+    expect(sumMaxValues(['genitalPosterior'], defs)).toBeCloseTo(0.5, 5);
+
+    expect(sumBySide('front', defs)).toBeCloseTo(50, 5);
+    expect(sumBySide('back', defs)).toBeCloseTo(50, 5);
   });
 });
 
@@ -139,6 +145,9 @@ describe('Lund-Browder calculation percentages (AGENTS.md)', () => {
     expect(percentages.rightLowerLegAnterior).toBe(2.5);
     expect(percentages.rightThighAnterior).toBe(3.5);
     expect(percentages.rightFootAnterior).toBe(1.5);
+
+    expect(percentages.genitalAnterior).toBe(1);
+    expect(percentages.genitalPosterior).toBe(1);
   });
 
   it('matches the 10+ table for age 10', () => {
@@ -161,5 +170,8 @@ describe('Lund-Browder calculation percentages (AGENTS.md)', () => {
     expect(percentages.rightLowerLegAnterior).toBe(3);
     expect(percentages.rightThighAnterior).toBe(4.5);
     expect(percentages.rightFootAnterior).toBe(1.5);
+
+    expect(percentages.genitalAnterior).toBe(0.5);
+    expect(percentages.genitalPosterior).toBe(0.5);
   });
 });

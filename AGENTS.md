@@ -38,8 +38,9 @@ Pediatric burn assessment calculator implementing:
 | Arms (Both) | 9% (1.5 × 6) | 9% (1.5 × 6) | 18% |
 | Thighs (Both) | 9% (4.5 × 2) | 9% (4.5 × 2) | 18% |
 | Legs (Both) | 6% (3 × 2) | 6% (3 × 2) | 12% |
-| Feet (Both) | 3% (1.5 × 2) | 3% (1.5 × 2) | 7%* |
-| **Grand Total** | **49.5%** | **50.5%** | **100%** |
+| Feet (Both) | 3% (1.5 × 2) | 3% (1.5 × 2) | 6% |
+| Genitals | 0.5% | 0.5% | 1% |
+| **Grand Total** | **50%** | **50%** | **100%** |
 
 **Head Division:** Single area (NO subdivision)
 - Per head: 4.5% anterior + 4.5% posterior = 9% total
@@ -53,7 +54,8 @@ Pediatric burn assessment calculator implementing:
 | Thighs (Both) | 7% (3.5×2) | 7% (3.5×2) | 14% |
 | Legs (Both) | 5% (2.5×2) | 5% (2.5×2) | 10% |
 | Feet (Both) | 3% (1.5×2) | 3% (1.5×2) | 6% |
-| **Grand Total** | **49%** | **51%** | **100%** |
+| Genitals | 1% | 1% | 2% |
+| **Grand Total** | **50%** | **50%** | **100%** |
 
 **Head Division:** 4 quadrants
 - Left anterior: 4.5%
@@ -68,7 +70,7 @@ Pediatric burn assessment calculator implementing:
 - All ages use left/right splits for torso and abdomen
 - Arms divided into: hand (1.5%), forearm (1.5%), upper arm (1.5%) per side
 - Legs divided into: foot (1.5%), lower leg (varies by age), thigh (varies by age) per side
-- **No genital area tracking** (removed per medical guidelines)
+- **Genitals:** 1% anterior + 1% posterior for ages <10; 0.5% + 0.5% for ages >=10
 
 ## Common Commands
 - **Install:** `npm install`
@@ -175,10 +177,7 @@ When modifying the body area tracking (e.g., removing genitals, changing subdivi
 
 ### Percentage Validation Tests
 - New tests in `src/utils/percentages.test.ts` validate both the **diagram max values** and **calculation tables** against AGENTS.md.
-- Diagram totals match AGENTS.md by adding a **posterior remainder** entry in `src/utils/bodyAreaDefinitions.ts`:
-  - Child: +2.0% (posterior)
-  - Adult: +1.0% (posterior)
-  - These are marked `includeInUI: false` so they do **not** appear in the direct-input UI or diagram.
+- Diagram totals match AGENTS.md and include **genitals** at 1%+1% (<10) and 0.5%+0.5% (>=10).
 
 ### Shared Graph Definitions
 - Diagram max values are now centralized in `src/utils/bodyAreaDefinitions.ts` and imported by `BodyDiagram.tsx`.

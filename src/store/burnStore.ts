@@ -212,6 +212,8 @@ export const useBurnStore = create<BurnStore>((set, get) => ({
     total += areas.rightFootPosterior + areas.rightLowerLegPosterior + areas.rightThighPosterior;
     total += areas.leftFootAnterior + areas.leftLowerLegAnterior + areas.leftThighAnterior;
     total += areas.leftFootPosterior + areas.leftLowerLegPosterior + areas.leftThighPosterior;
+
+    total += areas.genitalAnterior + areas.genitalPosterior;
     
     return total;
   },

@@ -97,9 +97,9 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 0, // Not used for children
       leftLegPosterior: 0,
       
-      // Genitals - not tracked for 1-year-olds
-      genitalAnterior: 0,
-      genitalPosterior: 0,
+      // Genitals
+      genitalAnterior: 1,
+      genitalPosterior: 1,
     };
   }
   
@@ -159,8 +159,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 0,
       leftLegPosterior: 0,
       
-      genitalAnterior: 0,
-      genitalPosterior: 0,
+      genitalAnterior: 1,
+      genitalPosterior: 1,
     };
   }
   
@@ -220,8 +220,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 0,
       leftLegPosterior: 0,
       
-      genitalAnterior: 0,
-      genitalPosterior: 0,
+      genitalAnterior: 1,
+      genitalPosterior: 1,
     };
   }
   
@@ -281,8 +281,8 @@ export function getLundBrowderPercentages(ageYears: number) {
       leftLegAnterior: 0,
       leftLegPosterior: 0,
       
-      genitalAnterior: 0,
-      genitalPosterior: 0,
+      genitalAnterior: 0.5,
+      genitalPosterior: 0.5,
     };
   }
   
@@ -341,8 +341,8 @@ export function getLundBrowderPercentages(ageYears: number) {
     leftLegAnterior: 0,
     leftLegPosterior: 0,
     
-    genitalAnterior: 0,
-    genitalPosterior: 0,
+    genitalAnterior: 0.5,
+    genitalPosterior: 0.5,
   };
 }
 

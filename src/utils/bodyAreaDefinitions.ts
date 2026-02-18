@@ -46,13 +46,8 @@ export const adultAreaDefinitions: Record<string, BodyAreaDefinition> = {
   leftLowerLegPosterior: { label: 'Pierna Izq. Inf. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
   leftThighPosterior: { label: 'Muslo Izq. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
 
-  posteriorRemainder: {
-    label: 'Ajuste Posterior',
-    maxValue: 1,
-    color: '#e5e7eb',
-    side: 'back',
-    includeInUI: false,
-  },
+  genitalAnterior: { label: 'Genitales Anterior', maxValue: 0.5, color: '#c084fc', side: 'front' },
+  genitalPosterior: { label: 'Genitales Posterior', maxValue: 0.5, color: '#c084fc', side: 'back' },
 };
 
 export const childAreaDefinitions: Record<string, BodyAreaDefinition> = {
@@ -99,11 +94,6 @@ export const childAreaDefinitions: Record<string, BodyAreaDefinition> = {
   leftLowerLegPosterior: { label: 'Pierna Izq. Inf. Posterior', maxValue: 2.5, color: '#34d399', side: 'back' },
   leftThighPosterior: { label: 'Muslo Izq. Posterior', maxValue: 3.5, color: '#34d399', side: 'back' },
 
-  posteriorRemainder: {
-    label: 'Ajuste Posterior',
-    maxValue: 2,
-    color: '#e5e7eb',
-    side: 'back',
-    includeInUI: false,
-  },
+  genitalAnterior: { label: 'Genitales Anterior', maxValue: 1, color: '#c084fc', side: 'front' },
+  genitalPosterior: { label: 'Genitales Posterior', maxValue: 1, color: '#c084fc', side: 'back' },
 };
