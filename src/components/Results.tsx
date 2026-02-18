@@ -80,11 +80,11 @@ export const Results: React.FC<ResultsProps> = ({ onNext, onBack }) => {
           </div>
           <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
             <p className="text-xs text-gray-600">Tórax Anterior</p>
-            <p className="text-lg font-bold text-yellow-600">{data.bodyAreas.torsoAnterior.toFixed(1)}%</p>
+            <p className="text-lg font-bold text-yellow-600">{(data.bodyAreas.torsoLeftAnterior + data.bodyAreas.torsoRightAnterior).toFixed(1)}%</p>
           </div>
           <div className="bg-orange-50 p-3 rounded border border-orange-200">
             <p className="text-xs text-gray-600">Tórax Posterior</p>
-            <p className="text-lg font-bold text-orange-600">{data.bodyAreas.torsoPosterior.toFixed(1)}%</p>
+            <p className="text-lg font-bold text-orange-600">{(data.bodyAreas.torsoLeftPosterior + data.bodyAreas.torsoRightPosterior).toFixed(1)}%</p>
           </div>
           <div className="bg-blue-50 p-3 rounded border border-blue-200">
             <p className="text-xs text-gray-600">Brazos</p>

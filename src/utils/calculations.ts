@@ -30,118 +30,319 @@ export function getAgeGroup(ageYears: number): string {
 }
 
 export function getLundBrowderPercentages(ageYears: number) {
-  // All ages now use anterior/posterior split based on Lund-Browder method
-  // Returns percentages for: head, torsoAnterior, torsoPosterior, abdomenAnterior, 
-  // abdomenPosterior, rightArmAnterior, leftArmAnterior, rightArmPosterior, 
-  // leftArmPosterior, rightLegAnterior, leftLegAnterior, rightLegPosterior, 
-  // leftLegPosterior, genitals
+  // Returns percentages based on age
+  // For children < 10: Uses detailed subdivisions
+  // For adults >= 10: Uses combined anatomical regions
   
   if (ageYears < 1) {
-    // 1-year-old Lund-Browder percentages from medical paper
+    // 1-year-old with detailed subdivisions matching medical diagram
     return {
-      headAnterior: 4.5, // split 50/50 between anterior and posterior
-      headPosterior: 4.5,
-      torsoAnterior: 8, // split as 4% left + 4% right
-      torsoPosterior: 8,
-      abdomenAnterior: 8, // split as 4% left + 4% right
-      abdomenPosterior: 8,
-      rightArmAnterior: 1.5,
-      leftArmAnterior: 1.5,
-      rightArmPosterior: 1.5,
-      leftArmPosterior: 1.5,
-      rightLegAnterior: 6, // 3.5% upper + 2.5% lower
-      leftLegAnterior: 6,
-      rightLegPosterior: 6,
-      leftLegPosterior: 6,
-      genitalAnterior: 0.5,
-      genitalPosterior: 0.5,
+      // Head - divided into 4 quadrants
+      headLeftAnterior: 4.5,
+      headRightAnterior: 4.5,
+      headLeftPosterior: 4.5,
+      headRightPosterior: 4.5,
+      headAnterior: 0, // Not used for children
+      headPosterior: 0,
+      
+      // Torso - divided into left/right sections
+      torsoLeftAnterior: 4,
+      torsoRightAnterior: 4,
+      torsoLeftPosterior: 4,
+      torsoRightPosterior: 4,
+      
+      // Abdomen - divided into left/right sections
+      abdomenLeftAnterior: 4,
+      abdomenRightAnterior: 4,
+      abdomenLeftPosterior: 4,
+      abdomenRightPosterior: 4,
+      
+      // Right arm - detailed subdivisions
+      rightHandAnterior: 1.5,
+      rightForearmAnterior: 1.5,
+      rightUpperArmAnterior: 1.5,
+      rightHandPosterior: 1.5,
+      rightForearmPosterior: 1.5,
+      rightUpperArmPosterior: 1.5,
+      rightArmAnterior: 0, // Not used for children
+      rightArmPosterior: 0,
+      
+      // Left arm - detailed subdivisions  
+      leftHandAnterior: 1.5,
+      leftForearmAnterior: 1.5,
+      leftUpperArmAnterior: 1.5,
+      leftHandPosterior: 1.5,
+      leftForearmPosterior: 1.5,
+      leftUpperArmPosterior: 1.5,
+      leftArmAnterior: 0, // Not used for children
+      leftArmPosterior: 0,
+      
+      // Right leg - detailed subdivisions
+      rightFootAnterior: 1.5,
+      rightLowerLegAnterior: 2.5,
+      rightThighAnterior: 3.5,
+      rightFootPosterior: 1.5,
+      rightLowerLegPosterior: 2.5,
+      rightThighPosterior: 3.5,
+      rightLegAnterior: 0, // Not used for children
+      rightLegPosterior: 0,
+      
+      // Left leg - detailed subdivisions
+      leftFootAnterior: 1.5,
+      leftLowerLegAnterior: 2.5,
+      leftThighAnterior: 3.5,
+      leftFootPosterior: 1.5,
+      leftLowerLegPosterior: 2.5,
+      leftThighPosterior: 3.5,
+      leftLegAnterior: 0, // Not used for children
+      leftLegPosterior: 0,
+      
+      // Genitals - not tracked for 1-year-olds
+      genitalAnterior: 0,
+      genitalPosterior: 0,
     };
   }
   
   if (ageYears < 5) {
-    // Age 1-4 years - similar to 1-year pattern
+    // Age 1-4 years - similar pattern to 1-year-old with slight adjustments
     return {
-      headAnterior: 4.5,
-      headPosterior: 4.5,
-      torsoAnterior: 8,
-      torsoPosterior: 8,
-      abdomenAnterior: 8,
-      abdomenPosterior: 8,
-      rightArmAnterior: 1.5,
-      leftArmAnterior: 1.5,
-      rightArmPosterior: 1.5,
-      leftArmPosterior: 1.5,
-      rightLegAnterior: 6.5,
-      leftLegAnterior: 6.5,
-      rightLegPosterior: 6.5,
-      leftLegPosterior: 6.5,
-      genitalAnterior: 0.5,
-      genitalPosterior: 0.5,
+      headLeftAnterior: 4.5,
+      headRightAnterior: 4.5,
+      headLeftPosterior: 4.5,
+      headRightPosterior: 4.5,
+      headAnterior: 0,
+      headPosterior: 0,
+      
+      torsoLeftAnterior: 4,
+      torsoRightAnterior: 4,
+      torsoLeftPosterior: 4,
+      torsoRightPosterior: 4,
+      
+      abdomenLeftAnterior: 4,
+      abdomenRightAnterior: 4,
+      abdomenLeftPosterior: 4,
+      abdomenRightPosterior: 4,
+      
+      rightHandAnterior: 1.5,
+      rightForearmAnterior: 1.5,
+      rightUpperArmAnterior: 1.5,
+      rightHandPosterior: 1.5,
+      rightForearmPosterior: 1.5,
+      rightUpperArmPosterior: 1.5,
+      rightArmAnterior: 0,
+      rightArmPosterior: 0,
+      
+      leftHandAnterior: 1.5,
+      leftForearmAnterior: 1.5,
+      leftUpperArmAnterior: 1.5,
+      leftHandPosterior: 1.5,
+      leftForearmPosterior: 1.5,
+      leftUpperArmPosterior: 1.5,
+      leftArmAnterior: 0,
+      leftArmPosterior: 0,
+      
+      rightFootAnterior: 1.5,
+      rightLowerLegAnterior: 2.75,
+      rightThighAnterior: 3.75,
+      rightFootPosterior: 1.5,
+      rightLowerLegPosterior: 2.75,
+      rightThighPosterior: 3.75,
+      rightLegAnterior: 0,
+      rightLegPosterior: 0,
+      
+      leftFootAnterior: 1.5,
+      leftLowerLegAnterior: 2.75,
+      leftThighAnterior: 3.75,
+      leftFootPosterior: 1.5,
+      leftLowerLegPosterior: 2.75,
+      leftThighPosterior: 3.75,
+      leftLegAnterior: 0,
+      leftLegPosterior: 0,
+      
+      genitalAnterior: 0,
+      genitalPosterior: 0,
     };
   }
   
   if (ageYears < 10) {
-    // Age 5-9 years
+    // Age 5-9 years - larger leg proportions
     return {
-      headAnterior: 4.5,
-      headPosterior: 4.5,
-      torsoAnterior: 8.5,
-      torsoPosterior: 8.5,
-      abdomenAnterior: 8.5,
-      abdomenPosterior: 8.5,
-      rightArmAnterior: 2,
-      leftArmAnterior: 2,
-      rightArmPosterior: 2,
-      leftArmPosterior: 2,
-      rightLegAnterior: 8,
-      leftLegAnterior: 8,
-      rightLegPosterior: 8,
-      leftLegPosterior: 8,
-      genitalAnterior: 0.5,
-      genitalPosterior: 0.5,
+      headLeftAnterior: 4.5,
+      headRightAnterior: 4.5,
+      headLeftPosterior: 4.5,
+      headRightPosterior: 4.5,
+      headAnterior: 0,
+      headPosterior: 0,
+      
+      torsoLeftAnterior: 4.25,
+      torsoRightAnterior: 4.25,
+      torsoLeftPosterior: 4.25,
+      torsoRightPosterior: 4.25,
+      
+      abdomenLeftAnterior: 4.25,
+      abdomenRightAnterior: 4.25,
+      abdomenLeftPosterior: 4.25,
+      abdomenRightPosterior: 4.25,
+      
+      rightHandAnterior: 1.5,
+      rightForearmAnterior: 1.5,
+      rightUpperArmAnterior: 1.5,
+      rightHandPosterior: 1.5,
+      rightForearmPosterior: 1.5,
+      rightUpperArmPosterior: 1.5,
+      rightArmAnterior: 0,
+      rightArmPosterior: 0,
+      
+      leftHandAnterior: 1.5,
+      leftForearmAnterior: 1.5,
+      leftUpperArmAnterior: 1.5,
+      leftHandPosterior: 1.5,
+      leftForearmPosterior: 1.5,
+      leftUpperArmPosterior: 1.5,
+      leftArmAnterior: 0,
+      leftArmPosterior: 0,
+      
+      rightFootAnterior: 1.5,
+      rightLowerLegAnterior: 2.75,
+      rightThighAnterior: 4,
+      rightFootPosterior: 1.5,
+      rightLowerLegPosterior: 2.75,
+      rightThighPosterior: 4,
+      rightLegAnterior: 0,
+      rightLegPosterior: 0,
+      
+      leftFootAnterior: 1.5,
+      leftLowerLegAnterior: 2.75,
+      leftThighAnterior: 4,
+      leftFootPosterior: 1.5,
+      leftLowerLegPosterior: 2.75,
+      leftThighPosterior: 4,
+      leftLegAnterior: 0,
+      leftLegPosterior: 0,
+      
+      genitalAnterior: 0,
+      genitalPosterior: 0,
     };
   }
   
   if (ageYears < 15) {
-    // Age 10-14 years
+    // Age 10-14 years - uses subdivisions like children but with adult proportions
     return {
+      headLeftAnterior: 0,
+      headRightAnterior: 0,
+      headLeftPosterior: 0,
+      headRightPosterior: 0,
       headAnterior: 4.5,
       headPosterior: 4.5,
-      torsoAnterior: 9,
-      torsoPosterior: 9,
-      abdomenAnterior: 9,
-      abdomenPosterior: 9,
-      rightArmAnterior: 4.5,
-      leftArmAnterior: 4.5,
-      rightArmPosterior: 4.5,
-      leftArmPosterior: 4.5,
-      rightLegAnterior: 9,
-      leftLegAnterior: 9,
-      rightLegPosterior: 9,
-      leftLegPosterior: 9,
-      genitalAnterior: 0.5,
-      genitalPosterior: 0.5,
+      
+      torsoLeftAnterior: 4.5,
+      torsoRightAnterior: 4.5,
+      torsoLeftPosterior: 4.5,
+      torsoRightPosterior: 4.5,
+      
+      abdomenLeftAnterior: 4.5,
+      abdomenRightAnterior: 4.5,
+      abdomenLeftPosterior: 4.5,
+      abdomenRightPosterior: 4.5,
+      
+      rightHandAnterior: 1.5,
+      rightForearmAnterior: 1.5,
+      rightUpperArmAnterior: 1.5,
+      rightHandPosterior: 1.5,
+      rightForearmPosterior: 1.5,
+      rightUpperArmPosterior: 1.5,
+      rightArmAnterior: 0,
+      rightArmPosterior: 0,
+      
+      leftHandAnterior: 1.5,
+      leftForearmAnterior: 1.5,
+      leftUpperArmAnterior: 1.5,
+      leftHandPosterior: 1.5,
+      leftForearmPosterior: 1.5,
+      leftUpperArmPosterior: 1.5,
+      leftArmAnterior: 0,
+      leftArmPosterior: 0,
+      
+      rightFootAnterior: 1.5,
+      rightLowerLegAnterior: 3,
+      rightThighAnterior: 4.5,
+      rightFootPosterior: 1.5,
+      rightLowerLegPosterior: 3,
+      rightThighPosterior: 4.5,
+      rightLegAnterior: 0,
+      rightLegPosterior: 0,
+      
+      leftFootAnterior: 1.5,
+      leftLowerLegAnterior: 3,
+      leftThighAnterior: 4.5,
+      leftFootPosterior: 1.5,
+      leftLowerLegPosterior: 3,
+      leftThighPosterior: 4.5,
+      leftLegAnterior: 0,
+      leftLegPosterior: 0,
+      
+      genitalAnterior: 0,
+      genitalPosterior: 0,
     };
   }
   
-  // 15+ years (adult)
+  // 15+ years (adult) - same as 10-14 years
   return {
+    headLeftAnterior: 0,
+    headRightAnterior: 0,
+    headLeftPosterior: 0,
+    headRightPosterior: 0,
     headAnterior: 4.5,
     headPosterior: 4.5,
-    torsoAnterior: 9,
-    torsoPosterior: 9,
-    abdomenAnterior: 9,
-    abdomenPosterior: 9,
-    rightArmAnterior: 4.5,
-    leftArmAnterior: 4.5,
-    rightArmPosterior: 4.5,
-    leftArmPosterior: 4.5,
-    rightLegAnterior: 9,
-    leftLegAnterior: 9,
-    rightLegPosterior: 9,
-    leftLegPosterior: 9,
-    genitalAnterior: 0.5,
-    genitalPosterior: 0.5,
+    
+    torsoLeftAnterior: 4.5,
+    torsoRightAnterior: 4.5,
+    torsoLeftPosterior: 4.5,
+    torsoRightPosterior: 4.5,
+    
+    abdomenLeftAnterior: 4.5,
+    abdomenRightAnterior: 4.5,
+    abdomenLeftPosterior: 4.5,
+    abdomenRightPosterior: 4.5,
+    
+    rightHandAnterior: 1.5,
+    rightForearmAnterior: 1.5,
+    rightUpperArmAnterior: 1.5,
+    rightHandPosterior: 1.5,
+    rightForearmPosterior: 1.5,
+    rightUpperArmPosterior: 1.5,
+    rightArmAnterior: 0,
+    rightArmPosterior: 0,
+    
+    leftHandAnterior: 1.5,
+    leftForearmAnterior: 1.5,
+    leftUpperArmAnterior: 1.5,
+    leftHandPosterior: 1.5,
+    leftForearmPosterior: 1.5,
+    leftUpperArmPosterior: 1.5,
+    leftArmAnterior: 0,
+    leftArmPosterior: 0,
+    
+    rightFootAnterior: 1.5,
+    rightLowerLegAnterior: 3,
+    rightThighAnterior: 4.5,
+    rightFootPosterior: 1.5,
+    rightLowerLegPosterior: 3,
+    rightThighPosterior: 4.5,
+    rightLegAnterior: 0,
+    rightLegPosterior: 0,
+    
+    leftFootAnterior: 1.5,
+    leftLowerLegAnterior: 3,
+    leftThighAnterior: 4.5,
+    leftFootPosterior: 1.5,
+    leftLowerLegPosterior: 3,
+    leftThighPosterior: 4.5,
+    leftLegAnterior: 0,
+    leftLegPosterior: 0,
+    
+    genitalAnterior: 0,
+    genitalPosterior: 0,
   };
 }
 
@@ -149,20 +350,59 @@ export function getDefaultBodyAreas(ageYears: number) {
   const percentages = getLundBrowderPercentages(ageYears);
   
   return {
+    headLeftAnterior: percentages.headLeftAnterior,
+    headRightAnterior: percentages.headRightAnterior,
+    headLeftPosterior: percentages.headLeftPosterior,
+    headRightPosterior: percentages.headRightPosterior,
     headAnterior: percentages.headAnterior,
     headPosterior: percentages.headPosterior,
-    torsoAnterior: percentages.torsoAnterior,
-    torsoPosterior: percentages.torsoPosterior,
-    abdomenAnterior: percentages.abdomenAnterior,
-    abdomenPosterior: percentages.abdomenPosterior,
+    
+    torsoLeftAnterior: percentages.torsoLeftAnterior,
+    torsoRightAnterior: percentages.torsoRightAnterior,
+    torsoLeftPosterior: percentages.torsoLeftPosterior,
+    torsoRightPosterior: percentages.torsoRightPosterior,
+    
+    abdomenLeftAnterior: percentages.abdomenLeftAnterior,
+    abdomenRightAnterior: percentages.abdomenRightAnterior,
+    abdomenLeftPosterior: percentages.abdomenLeftPosterior,
+    abdomenRightPosterior: percentages.abdomenRightPosterior,
+    
+    rightHandAnterior: percentages.rightHandAnterior,
+    rightForearmAnterior: percentages.rightForearmAnterior,
+    rightUpperArmAnterior: percentages.rightUpperArmAnterior,
+    rightHandPosterior: percentages.rightHandPosterior,
+    rightForearmPosterior: percentages.rightForearmPosterior,
+    rightUpperArmPosterior: percentages.rightUpperArmPosterior,
     rightArmAnterior: percentages.rightArmAnterior,
-    leftArmAnterior: percentages.leftArmAnterior,
     rightArmPosterior: percentages.rightArmPosterior,
+    
+    leftHandAnterior: percentages.leftHandAnterior,
+    leftForearmAnterior: percentages.leftForearmAnterior,
+    leftUpperArmAnterior: percentages.leftUpperArmAnterior,
+    leftHandPosterior: percentages.leftHandPosterior,
+    leftForearmPosterior: percentages.leftForearmPosterior,
+    leftUpperArmPosterior: percentages.leftUpperArmPosterior,
+    leftArmAnterior: percentages.leftArmAnterior,
     leftArmPosterior: percentages.leftArmPosterior,
+    
+    rightFootAnterior: percentages.rightFootAnterior,
+    rightLowerLegAnterior: percentages.rightLowerLegAnterior,
+    rightThighAnterior: percentages.rightThighAnterior,
+    rightFootPosterior: percentages.rightFootPosterior,
+    rightLowerLegPosterior: percentages.rightLowerLegPosterior,
+    rightThighPosterior: percentages.rightThighPosterior,
     rightLegAnterior: percentages.rightLegAnterior,
-    leftLegAnterior: percentages.leftLegAnterior,
     rightLegPosterior: percentages.rightLegPosterior,
+    
+    leftFootAnterior: percentages.leftFootAnterior,
+    leftLowerLegAnterior: percentages.leftLowerLegAnterior,
+    leftThighAnterior: percentages.leftThighAnterior,
+    leftFootPosterior: percentages.leftFootPosterior,
+    leftLowerLegPosterior: percentages.leftLowerLegPosterior,
+    leftThighPosterior: percentages.leftThighPosterior,
+    leftLegAnterior: percentages.leftLegAnterior,
     leftLegPosterior: percentages.leftLegPosterior,
+    
     genitalAnterior: percentages.genitalAnterior,
     genitalPosterior: percentages.genitalPosterior,
   };

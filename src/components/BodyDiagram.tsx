@@ -17,60 +17,111 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
   const isAdult = data.age >= 10;
+  const isChild = data.age < 10;
 
-  // Area definitions for adult (10+) with separate anterior and posterior
-  // Each front/back shows half of the total percentage (e.g., 4.5% front + 4.5% back = 9% total)
+  // Area definitions for adults (10+) - uses subdivisions with adult proportions
   const adultAreaDefinitions = {
-    // Front body areas - each shows 50% of total
     headAnterior: { label: 'Cabeza Anterior', maxValue: 4.5, color: '#fca5a5', side: 'front' },
-    torsoAnterior: { label: 'Tórax Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
-    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
-    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 2.25, color: '#60a5fa', side: 'front' },
-    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 2.25, color: '#60a5fa', side: 'front' },
-    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
-    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
-    genitalAnterior: { label: 'Genitales Anterior', maxValue: 0.5, color: '#c084fc', side: 'front' },
-    
-    // Back body areas - each shows 50% of total
     headPosterior: { label: 'Cabeza Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
-    torsoPosterior: { label: 'Tórax Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
-    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
-    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 2.25, color: '#60a5fa', side: 'back' },
-    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 2.25, color: '#60a5fa', side: 'back' },
-    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
-    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
-    genitalPosterior: { label: 'Genitales Posterior', maxValue: 0.5, color: '#c084fc', side: 'back' },
+    torsoLeftAnterior: { label: 'Tórax Izq. Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
+    torsoRightAnterior: { label: 'Tórax Der. Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
+    torsoLeftPosterior: { label: 'Tórax Izq. Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
+    torsoRightPosterior: { label: 'Tórax Der. Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
+    abdomenLeftAnterior: { label: 'Abdomen Izq. Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
+    abdomenRightAnterior: { label: 'Abdomen Der. Anterior', maxValue: 4.5, color: '#fbbf24', side: 'front' },
+    abdomenLeftPosterior: { label: 'Abdomen Izq. Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
+    abdomenRightPosterior: { label: 'Abdomen Der. Posterior', maxValue: 4.5, color: '#f97316', side: 'back' },
+    
+    // Right arm subdivisions
+    rightHandAnterior: { label: 'Mano Der. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    rightForearmAnterior: { label: 'Antebrazo Der. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    rightUpperArmAnterior: { label: 'Brazo Der. Sup. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    rightHandPosterior: { label: 'Mano Der. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    rightForearmPosterior: { label: 'Antebrazo Der. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    rightUpperArmPosterior: { label: 'Brazo Der. Sup. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    
+    // Left arm subdivisions
+    leftHandAnterior: { label: 'Mano Izq. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    leftForearmAnterior: { label: 'Antebrazo Izq. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    leftUpperArmAnterior: { label: 'Brazo Izq. Sup. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    leftHandPosterior: { label: 'Mano Izq. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    leftForearmPosterior: { label: 'Antebrazo Izq. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    leftUpperArmPosterior: { label: 'Brazo Izq. Sup. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    
+    // Right leg subdivisions
+    rightFootAnterior: { label: 'Pie Der. Anterior', maxValue: 1.5, color: '#34d399', side: 'front' },
+    rightLowerLegAnterior: { label: 'Pierna Der. Inf. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
+    rightThighAnterior: { label: 'Muslo Der. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
+    rightFootPosterior: { label: 'Pie Der. Posterior', maxValue: 1.5, color: '#34d399', side: 'back' },
+    rightLowerLegPosterior: { label: 'Pierna Der. Inf. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
+    rightThighPosterior: { label: 'Muslo Der. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
+    
+    // Left leg subdivisions
+    leftFootAnterior: { label: 'Pie Izq. Anterior', maxValue: 1.5, color: '#34d399', side: 'front' },
+    leftLowerLegAnterior: { label: 'Pierna Izq. Inf. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
+    leftThighAnterior: { label: 'Muslo Izq. Anterior', maxValue: 4.5, color: '#34d399', side: 'front' },
+    leftFootPosterior: { label: 'Pie Izq. Posterior', maxValue: 1.5, color: '#34d399', side: 'back' },
+    leftLowerLegPosterior: { label: 'Pierna Izq. Inf. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
+    leftThighPosterior: { label: 'Muslo Izq. Posterior', maxValue: 4.5, color: '#34d399', side: 'back' },
   };
 
-  // Area definitions for children < 10 with front/back - using 1-year-old Lund-Browder percentages
-  // Each front/back shows 50% of total percentage
+  // Area definitions for children (<10) - uses detailed subdivisions
   const childAreaDefinitions = {
-    // Front body areas - each shows 50% of total
-    headAnterior: { label: 'Cabeza Anterior', maxValue: 4.5, color: '#fca5a5', side: 'front' },
-    torsoAnterior: { label: 'Tórax Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
-    abdomenAnterior: { label: 'Abdomen Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
-    rightArmAnterior: { label: 'Brazo D. Anterior', maxValue: 0.75, color: '#60a5fa', side: 'front' },
-    leftArmAnterior: { label: 'Brazo I. Anterior', maxValue: 0.75, color: '#60a5fa', side: 'front' },
-    rightLegAnterior: { label: 'Pierna D. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
-    leftLegAnterior: { label: 'Pierna I. Anterior', maxValue: 3, color: '#34d399', side: 'front' },
-    genitalAnterior: { label: 'Genitales Anterior', maxValue: 0.5, color: '#c084fc', side: 'front' },
+    // Head subdivisions
+    headLeftAnterior: { label: 'Cabeza Izq. Anterior', maxValue: 4.5, color: '#fca5a5', side: 'front' },
+    headRightAnterior: { label: 'Cabeza Der. Anterior', maxValue: 4.5, color: '#fca5a5', side: 'front' },
+    headLeftPosterior: { label: 'Cabeza Izq. Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
+    headRightPosterior: { label: 'Cabeza Der. Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
     
-    // Back body areas - each shows 50% of total
-    headPosterior: { label: 'Cabeza Posterior', maxValue: 4.5, color: '#fca5a5', side: 'back' },
-    torsoPosterior: { label: 'Tórax Posterior', maxValue: 4, color: '#f97316', side: 'back' },
-    abdomenPosterior: { label: 'Abdomen Posterior', maxValue: 4, color: '#f97316', side: 'back' },
-    rightArmPosterior: { label: 'Brazo D. Posterior', maxValue: 0.75, color: '#60a5fa', side: 'back' },
-    leftArmPosterior: { label: 'Brazo I. Posterior', maxValue: 0.75, color: '#60a5fa', side: 'back' },
-    rightLegPosterior: { label: 'Pierna D. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
-    leftLegPosterior: { label: 'Pierna I. Posterior', maxValue: 3, color: '#34d399', side: 'back' },
-    genitalPosterior: { label: 'Genitales Posterior', maxValue: 0.5, color: '#c084fc', side: 'back' },
+    // Torso subdivisions
+    torsoLeftAnterior: { label: 'Tórax Izq. Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
+    torsoRightAnterior: { label: 'Tórax Der. Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
+    torsoLeftPosterior: { label: 'Tórax Izq. Posterior', maxValue: 4, color: '#f97316', side: 'back' },
+    torsoRightPosterior: { label: 'Tórax Der. Posterior', maxValue: 4, color: '#f97316', side: 'back' },
+    
+    // Abdomen subdivisions
+    abdomenLeftAnterior: { label: 'Abdomen Izq. Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
+    abdomenRightAnterior: { label: 'Abdomen Der. Anterior', maxValue: 4, color: '#fbbf24', side: 'front' },
+    abdomenLeftPosterior: { label: 'Abdomen Izq. Posterior', maxValue: 4, color: '#f97316', side: 'back' },
+    abdomenRightPosterior: { label: 'Abdomen Der. Posterior', maxValue: 4, color: '#f97316', side: 'back' },
+    
+    // Right arm subdivisions
+    rightHandAnterior: { label: 'Mano Der. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    rightForearmAnterior: { label: 'Antebrazo Der. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    rightUpperArmAnterior: { label: 'Brazo Der. Sup. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    rightHandPosterior: { label: 'Mano Der. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    rightForearmPosterior: { label: 'Antebrazo Der. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    rightUpperArmPosterior: { label: 'Brazo Der. Sup. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    
+    // Left arm subdivisions
+    leftHandAnterior: { label: 'Mano Izq. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    leftForearmAnterior: { label: 'Antebrazo Izq. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    leftUpperArmAnterior: { label: 'Brazo Izq. Sup. Anterior', maxValue: 1.5, color: '#60a5fa', side: 'front' },
+    leftHandPosterior: { label: 'Mano Izq. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    leftForearmPosterior: { label: 'Antebrazo Izq. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    leftUpperArmPosterior: { label: 'Brazo Izq. Sup. Posterior', maxValue: 1.5, color: '#60a5fa', side: 'back' },
+    
+    // Right leg subdivisions
+    rightFootAnterior: { label: 'Pie Der. Anterior', maxValue: 1.5, color: '#34d399', side: 'front' },
+    rightLowerLegAnterior: { label: 'Pierna Der. Inf. Anterior', maxValue: 2.75, color: '#34d399', side: 'front' },
+    rightThighAnterior: { label: 'Muslo Der. Anterior', maxValue: 4, color: '#34d399', side: 'front' },
+    rightFootPosterior: { label: 'Pie Der. Posterior', maxValue: 1.5, color: '#34d399', side: 'back' },
+    rightLowerLegPosterior: { label: 'Pierna Der. Inf. Posterior', maxValue: 2.75, color: '#34d399', side: 'back' },
+    rightThighPosterior: { label: 'Muslo Der. Posterior', maxValue: 4, color: '#34d399', side: 'back' },
+    
+    // Left leg subdivisions
+    leftFootAnterior: { label: 'Pie Izq. Anterior', maxValue: 1.5, color: '#34d399', side: 'front' },
+    leftLowerLegAnterior: { label: 'Pierna Izq. Inf. Anterior', maxValue: 2.75, color: '#34d399', side: 'front' },
+    leftThighAnterior: { label: 'Muslo Izq. Anterior', maxValue: 4, color: '#34d399', side: 'front' },
+    leftFootPosterior: { label: 'Pie Izq. Posterior', maxValue: 1.5, color: '#34d399', side: 'back' },
+    leftLowerLegPosterior: { label: 'Pierna Izq. Inf. Posterior', maxValue: 2.75, color: '#34d399', side: 'back' },
+    leftThighPosterior: { label: 'Muslo Izq. Posterior', maxValue: 4, color: '#34d399', side: 'back' },
   };
 
   const handleAreaClick = (areaKey: string, percentageAtPoint: number) => {
     const currentValue = areas[areaKey as keyof typeof areas];
-    const maxValue = isAdult 
-      ? adultAreaDefinitions[areaKey as keyof typeof adultAreaDefinitions]?.maxValue || 10
-      : childAreaDefinitions[areaKey as keyof typeof childAreaDefinitions]?.maxValue || 10;
+    const areaDefs = isAdult ? adultAreaDefinitions : childAreaDefinitions;
+    const maxValue = areaDefs[areaKey as keyof typeof areaDefs]?.maxValue || 10;
     
     const newValue = Math.abs(currentValue - percentageAtPoint) < 0.1 ? 0 : percentageAtPoint;
     updateBodyArea(areaKey as keyof typeof areas, Math.min(newValue, maxValue));
@@ -82,9 +133,8 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     const rect = svgRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     
-    const maxValue = isAdult
-      ? adultAreaDefinitions[areaKey as keyof typeof adultAreaDefinitions]?.maxValue || 10
-      : childAreaDefinitions[areaKey as keyof typeof childAreaDefinitions]?.maxValue || 10;
+    const areaDefs = isAdult ? adultAreaDefinitions : childAreaDefinitions;
+    const maxValue = areaDefs[areaKey as keyof typeof areaDefs]?.maxValue || 10;
     const svgWidth = svgRef.current.clientWidth;
     
     const proportion = Math.min(Math.max(x / svgWidth, 0), 1);
@@ -108,32 +158,18 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   };
 
   const handleClear = () => {
-    const empty = {
-      headAnterior: 0,
-      headPosterior: 0,
-      torsoAnterior: 0,
-      torsoPosterior: 0,
-      abdomenAnterior: 0,
-      abdomenPosterior: 0,
-      rightArmAnterior: 0,
-      leftArmAnterior: 0,
-      rightArmPosterior: 0,
-      leftArmPosterior: 0,
-      rightLegAnterior: 0,
-      leftLegAnterior: 0,
-      rightLegPosterior: 0,
-      leftLegPosterior: 0,
-      genitalAnterior: 0,
-      genitalPosterior: 0,
-    };
+    const empty = getDefaultBodyAreas(data.age);
+    // Set all values to 0
+    Object.keys(empty).forEach(key => {
+      (empty as any)[key] = 0;
+    });
     updateData({ bodyAreas: empty, estimatedBSA: 0 });
   };
 
   const handleDirectInput = (areaKey: string, value: string) => {
     const numValue = parseFloat(value) || 0;
-    const maxValue = isAdult
-      ? adultAreaDefinitions[areaKey as keyof typeof adultAreaDefinitions]?.maxValue || 10
-      : childAreaDefinitions[areaKey as keyof typeof childAreaDefinitions]?.maxValue || 10;
+    const areaDefs = isAdult ? adultAreaDefinitions : childAreaDefinitions;
+    const maxValue = areaDefs[areaKey as keyof typeof areaDefs]?.maxValue || 10;
     
     const clampedValue = Math.min(Math.max(numValue, 0), maxValue);
     updateBodyArea(areaKey as keyof typeof areas, clampedValue);
@@ -142,411 +178,217 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   const getAreaDefinitions = () => isAdult ? adultAreaDefinitions : childAreaDefinitions;
   const areaDefs = getAreaDefinitions();
 
-  // Render diagram with front and back views
-  const renderBodyDiagram = () => (
-    <div className="space-y-6">
-      {/* View selector */}
-      <div className="flex gap-2 justify-center mb-4">
-        <button
-          onClick={() => setViewMode('front')}
-          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-            viewMode === 'front'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-          }`}
+  // Helper to render SVG area
+  const renderSVGArea = (
+    areaKey: string,
+    shape: 'rect' | 'circle',
+    shapeProps: any,
+    fontSize: number = 12
+  ) => {
+    const def = areaDefs[areaKey as keyof typeof areaDefs];
+    if (!def) return null;
+
+    const currentValue = areas[areaKey as keyof typeof areas];
+    const displayValue = hoveredArea === areaKey ? hoveredValue : currentValue;
+
+    return (
+      <g
+        onMouseMove={(e) => handleSvgMouseMove(e, areaKey)}
+        onMouseLeave={handleSvgMouseLeave}
+        onClick={() => handleAreaClick(areaKey, hoveredValue)}
+        className="cursor-pointer hover:opacity-75 transition-opacity"
+      >
+        {shape === 'circle' ? (
+          <circle
+            {...shapeProps}
+            fill={hoveredArea === areaKey ? def.color : def.color + 'CC'}
+            stroke={currentValue > 0 ? '#991b1b' : '#999'}
+            strokeWidth="2"
+          />
+        ) : (
+          <rect
+            {...shapeProps}
+            fill={hoveredArea === areaKey ? def.color : def.color + 'CC'}
+            stroke={currentValue > 0 ? '#991b1b' : '#999'}
+            strokeWidth="2"
+          />
+        )}
+        <text
+          x={shape === 'circle' ? shapeProps.cx : shapeProps.x + shapeProps.width / 2}
+          y={shape === 'circle' ? shapeProps.cy + 5 : shapeProps.y + shapeProps.height / 2 + 5}
+          textAnchor="middle"
+          fontSize={fontSize}
+          fontWeight="bold"
+          fill="#000"
         >
-          Vista Frontal
-        </button>
-        <button
-          onClick={() => setViewMode('back')}
-          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-            viewMode === 'back'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-          }`}
-        >
-          Vista Posterior
-        </button>
-      </div>
+          {displayValue > 0 ? displayValue.toFixed(1) : '?'}%
+        </text>
+      </g>
+    );
+  };
 
-      {/* Front view */}
-      {viewMode === 'front' && (
-        <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
-          <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Frontal</h3>
-          <svg
-            ref={svgRef}
-            viewBox="0 0 400 700"
-            className="w-full max-w-sm mx-auto"
-          >
-            {/* Head Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'headAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('headAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <circle
-                cx="200"
-                cy="60"
-                r="35"
-                fill={hoveredArea === 'headAnterior' ? '#fca5a5' : '#fecaca'}
-                stroke={areas.headAnterior > 0 ? '#dc2626' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="200" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-                {hoveredArea === 'headAnterior' ? hoveredValue.toFixed(1) : areas.headAnterior > 0 ? areas.headAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Torso Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'torsoAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('torsoAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="150"
-                y="110"
-                width="100"
-                height="80"
-                fill={hoveredArea === 'torsoAnterior' ? '#fbbf24' : '#fcd34d'}
-                stroke={areas.torsoAnterior > 0 ? '#d97706' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="200" y="158" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
-                {hoveredArea === 'torsoAnterior' ? hoveredValue.toFixed(1) : areas.torsoAnterior > 0 ? areas.torsoAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Abdomen Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'abdomenAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('abdomenAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="150"
-                y="200"
-                width="100"
-                height="75"
-                fill={hoveredArea === 'abdomenAnterior' ? '#fbbf24' : '#fcd34d'}
-                stroke={areas.abdomenAnterior > 0 ? '#d97706' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="200" y="242" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
-                {hoveredArea === 'abdomenAnterior' ? hoveredValue.toFixed(1) : areas.abdomenAnterior > 0 ? areas.abdomenAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Right Arm Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'rightArmAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('rightArmAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="70"
-                y="130"
-                width="50"
-                height="140"
-                fill={hoveredArea === 'rightArmAnterior' ? '#60a5fa' : '#93c5fd'}
-                stroke={areas.rightArmAnterior > 0 ? '#0284c7' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="95" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'rightArmAnterior' ? hoveredValue.toFixed(1) : areas.rightArmAnterior > 0 ? areas.rightArmAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Left Arm Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'leftArmAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('leftArmAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="280"
-                y="130"
-                width="50"
-                height="140"
-                fill={hoveredArea === 'leftArmAnterior' ? '#60a5fa' : '#93c5fd'}
-                stroke={areas.leftArmAnterior > 0 ? '#0284c7' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="305" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'leftArmAnterior' ? hoveredValue.toFixed(1) : areas.leftArmAnterior > 0 ? areas.leftArmAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Right Leg Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'rightLegAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('rightLegAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="150"
-                y="290"
-                width="40"
-                height="150"
-                fill={hoveredArea === 'rightLegAnterior' ? '#34d399' : '#86efac'}
-                stroke={areas.rightLegAnterior > 0 ? '#059669' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="170" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'rightLegAnterior' ? hoveredValue.toFixed(1) : areas.rightLegAnterior > 0 ? areas.rightLegAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Left Leg Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'leftLegAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('leftLegAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="210"
-                y="290"
-                width="40"
-                height="150"
-                fill={hoveredArea === 'leftLegAnterior' ? '#34d399' : '#86efac'}
-                stroke={areas.leftLegAnterior > 0 ? '#059669' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="230" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'leftLegAnterior' ? hoveredValue.toFixed(1) : areas.leftLegAnterior > 0 ? areas.leftLegAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Genitals Anterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'genitalAnterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('genitalAnterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="180"
-                y="280"
-                width="40"
-                height="12"
-                fill={hoveredArea === 'genitalAnterior' ? '#c084fc' : '#e9d5ff'}
-                stroke={areas.genitalAnterior > 0 ? '#a855f7' : '#999'}
-                strokeWidth="1"
-              />
-              <text x="200" y="289" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
-                {hoveredArea === 'genitalAnterior' ? hoveredValue.toFixed(1) : areas.genitalAnterior > 0 ? areas.genitalAnterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-          </svg>
-        </div>
-      )}
-
-      {/* Back view */}
-      {viewMode === 'back' && (
-        <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
-          <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Posterior</h3>
-          <svg
-            ref={svgRef}
-            viewBox="0 0 400 700"
-            className="w-full max-w-sm mx-auto"
-          >
-            {/* Head Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'headPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('headPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <circle
-                cx="200"
-                cy="60"
-                r="35"
-                fill={hoveredArea === 'headPosterior' ? '#fca5a5' : '#fecaca'}
-                stroke={areas.headPosterior > 0 ? '#dc2626' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="200" y="65" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#000">
-                {hoveredArea === 'headPosterior' ? hoveredValue.toFixed(1) : areas.headPosterior > 0 ? areas.headPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Torso Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'torsoPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('torsoPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="150"
-                y="110"
-                width="100"
-                height="80"
-                fill={hoveredArea === 'torsoPosterior' ? '#f97316' : '#fed7aa'}
-                stroke={areas.torsoPosterior > 0 ? '#c2410c' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="200" y="158" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
-                {hoveredArea === 'torsoPosterior' ? hoveredValue.toFixed(1) : areas.torsoPosterior > 0 ? areas.torsoPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Abdomen Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'abdomenPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('abdomenPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="150"
-                y="200"
-                width="100"
-                height="75"
-                fill={hoveredArea === 'abdomenPosterior' ? '#f97316' : '#fed7aa'}
-                stroke={areas.abdomenPosterior > 0 ? '#c2410c' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="200" y="242" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#000">
-                {hoveredArea === 'abdomenPosterior' ? hoveredValue.toFixed(1) : areas.abdomenPosterior > 0 ? areas.abdomenPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Right Arm Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'rightArmPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('rightArmPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="70"
-                y="130"
-                width="50"
-                height="140"
-                fill={hoveredArea === 'rightArmPosterior' ? '#60a5fa' : '#93c5fd'}
-                stroke={areas.rightArmPosterior > 0 ? '#0284c7' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="95" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'rightArmPosterior' ? hoveredValue.toFixed(1) : areas.rightArmPosterior > 0 ? areas.rightArmPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Left Arm Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'leftArmPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('leftArmPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="280"
-                y="130"
-                width="50"
-                height="140"
-                fill={hoveredArea === 'leftArmPosterior' ? '#60a5fa' : '#93c5fd'}
-                stroke={areas.leftArmPosterior > 0 ? '#0284c7' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="305" y="205" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'leftArmPosterior' ? hoveredValue.toFixed(1) : areas.leftArmPosterior > 0 ? areas.leftArmPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Right Leg Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'rightLegPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('rightLegPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="150"
-                y="290"
-                width="40"
-                height="150"
-                fill={hoveredArea === 'rightLegPosterior' ? '#34d399' : '#86efac'}
-                stroke={areas.rightLegPosterior > 0 ? '#059669' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="170" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'rightLegPosterior' ? hoveredValue.toFixed(1) : areas.rightLegPosterior > 0 ? areas.rightLegPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Left Leg Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'leftLegPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('leftLegPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="210"
-                y="290"
-                width="40"
-                height="150"
-                fill={hoveredArea === 'leftLegPosterior' ? '#34d399' : '#86efac'}
-                stroke={areas.leftLegPosterior > 0 ? '#059669' : '#999'}
-                strokeWidth="2"
-              />
-              <text x="230" y="370" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#000">
-                {hoveredArea === 'leftLegPosterior' ? hoveredValue.toFixed(1) : areas.leftLegPosterior > 0 ? areas.leftLegPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-
-            {/* Genitals Posterior */}
-            <g
-              onMouseMove={(e) => handleSvgMouseMove(e, 'genitalPosterior')}
-              onMouseLeave={handleSvgMouseLeave}
-              onClick={() => handleAreaClick('genitalPosterior', hoveredValue)}
-              className="cursor-pointer hover:opacity-75 transition-opacity"
-            >
-              <rect
-                x="180"
-                y="280"
-                width="40"
-                height="12"
-                fill={hoveredArea === 'genitalPosterior' ? '#c084fc' : '#e9d5ff'}
-                stroke={areas.genitalPosterior > 0 ? '#a855f7' : '#999'}
-                strokeWidth="1"
-              />
-              <text x="200" y="289" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000">
-                {hoveredArea === 'genitalPosterior' ? hoveredValue.toFixed(1) : areas.genitalPosterior > 0 ? areas.genitalPosterior.toFixed(1) : '?'}%
-              </text>
-            </g>
-          </svg>
-        </div>
-      )}
-    </div>
+  const renderChildFrontView = () => (
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+      {/* Head - split left/right */}
+      {renderSVGArea('headLeftAnterior', 'circle', { cx: 180, cy: 60, r: 25 }, 11)}
+      {renderSVGArea('headRightAnterior', 'circle', { cx: 220, cy: 60, r: 25 }, 11)}
+      
+      {/* Torso - split left/right */}
+      {renderSVGArea('torsoLeftAnterior', 'rect', { x: 155, y: 100, width: 45, height: 70 }, 10)}
+      {renderSVGArea('torsoRightAnterior', 'rect', { x: 200, y: 100, width: 45, height: 70 }, 10)}
+      
+      {/* Abdomen - split left/right */}
+      {renderSVGArea('abdomenLeftAnterior', 'rect', { x: 155, y: 175, width: 45, height: 65 }, 10)}
+      {renderSVGArea('abdomenRightAnterior', 'rect', { x: 200, y: 175, width: 45, height: 65 }, 10)}
+      
+      {/* Right arm - hand, forearm, upper arm */}
+      {renderSVGArea('rightHandAnterior', 'rect', { x: 75, y: 235, width: 35, height: 30 }, 9)}
+      {renderSVGArea('rightForearmAnterior', 'rect', { x: 80, y: 180, width: 40, height: 55 }, 9)}
+      {renderSVGArea('rightUpperArmAnterior', 'rect', { x: 95, y: 110, width: 50, height: 70 }, 10)}
+      
+      {/* Left arm - hand, forearm, upper arm */}
+      {renderSVGArea('leftHandAnterior', 'rect', { x: 290, y: 235, width: 35, height: 30 }, 9)}
+      {renderSVGArea('leftForearmAnterior', 'rect', { x: 280, y: 180, width: 40, height: 55 }, 9)}
+      {renderSVGArea('leftUpperArmAnterior', 'rect', { x: 255, y: 110, width: 50, height: 70 }, 10)}
+      
+      {/* Right leg - thigh, lower leg, foot */}
+      {renderSVGArea('rightThighAnterior', 'rect', { x: 150, y: 245, width: 40, height: 80 }, 10)}
+      {renderSVGArea('rightLowerLegAnterior', 'rect', { x: 150, y: 325, width: 38, height: 80 }, 9)}
+      {renderSVGArea('rightFootAnterior', 'rect', { x: 148, y: 405, width: 40, height: 25 }, 9)}
+      
+      {/* Left leg - thigh, lower leg, foot */}
+      {renderSVGArea('leftThighAnterior', 'rect', { x: 210, y: 245, width: 40, height: 80 }, 10)}
+      {renderSVGArea('leftLowerLegAnterior', 'rect', { x: 212, y: 325, width: 38, height: 80 }, 9)}
+      {renderSVGArea('leftFootAnterior', 'rect', { x: 212, y: 405, width: 40, height: 25 }, 9)}
+    </svg>
   );
 
-  // Render simple child diagram (< 10 years)
+  const renderChildBackView = () => (
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+      {/* Head - split left/right */}
+      {renderSVGArea('headLeftPosterior', 'circle', { cx: 180, cy: 60, r: 25 }, 11)}
+      {renderSVGArea('headRightPosterior', 'circle', { cx: 220, cy: 60, r: 25 }, 11)}
+      
+      {/* Torso - split left/right */}
+      {renderSVGArea('torsoLeftPosterior', 'rect', { x: 155, y: 100, width: 45, height: 70 }, 10)}
+      {renderSVGArea('torsoRightPosterior', 'rect', { x: 200, y: 100, width: 45, height: 70 }, 10)}
+      
+      {/* Abdomen/buttocks - split left/right */}
+      {renderSVGArea('abdomenLeftPosterior', 'rect', { x: 155, y: 175, width: 45, height: 65 }, 10)}
+      {renderSVGArea('abdomenRightPosterior', 'rect', { x: 200, y: 175, width: 45, height: 65 }, 10)}
+      
+      {/* Right arm - hand, forearm, upper arm */}
+      {renderSVGArea('rightHandPosterior', 'rect', { x: 75, y: 235, width: 35, height: 30 }, 9)}
+      {renderSVGArea('rightForearmPosterior', 'rect', { x: 80, y: 180, width: 40, height: 55 }, 9)}
+      {renderSVGArea('rightUpperArmPosterior', 'rect', { x: 95, y: 110, width: 50, height: 70 }, 10)}
+      
+      {/* Left arm - hand, forearm, upper arm */}
+      {renderSVGArea('leftHandPosterior', 'rect', { x: 290, y: 235, width: 35, height: 30 }, 9)}
+      {renderSVGArea('leftForearmPosterior', 'rect', { x: 280, y: 180, width: 40, height: 55 }, 9)}
+      {renderSVGArea('leftUpperArmPosterior', 'rect', { x: 255, y: 110, width: 50, height: 70 }, 10)}
+      
+      {/* Right leg - thigh, lower leg, foot */}
+      {renderSVGArea('rightThighPosterior', 'rect', { x: 150, y: 245, width: 40, height: 80 }, 10)}
+      {renderSVGArea('rightLowerLegPosterior', 'rect', { x: 150, y: 325, width: 38, height: 80 }, 9)}
+      {renderSVGArea('rightFootPosterior', 'rect', { x: 148, y: 405, width: 40, height: 25 }, 9)}
+      
+      {/* Left leg - thigh, lower leg, foot */}
+      {renderSVGArea('leftThighPosterior', 'rect', { x: 210, y: 245, width: 40, height: 80 }, 10)}
+      {renderSVGArea('leftLowerLegPosterior', 'rect', { x: 212, y: 325, width: 38, height: 80 }, 9)}
+      {renderSVGArea('leftFootPosterior', 'rect', { x: 212, y: 405, width: 40, height: 25 }, 9)}
+    </svg>
+  );
+
+  const renderAdultFrontView = () => (
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+      {/* Head */}
+      {renderSVGArea('headAnterior', 'circle', { cx: 200, cy: 60, r: 35 }, 14)}
+      
+      {/* Torso - split left/right */}
+      {renderSVGArea('torsoLeftAnterior', 'rect', { x: 150, y: 110, width: 50, height: 80 }, 11)}
+      {renderSVGArea('torsoRightAnterior', 'rect', { x: 200, y: 110, width: 50, height: 80 }, 11)}
+      
+      {/* Abdomen - split left/right */}
+      {renderSVGArea('abdomenLeftAnterior', 'rect', { x: 150, y: 200, width: 50, height: 75 }, 11)}
+      {renderSVGArea('abdomenRightAnterior', 'rect', { x: 200, y: 200, width: 50, height: 75 }, 11)}
+      
+      {/* Right arm - hand, forearm, upper arm */}
+      {renderSVGArea('rightHandAnterior', 'rect', { x: 70, y: 235, width: 35, height: 30 }, 10)}
+      {renderSVGArea('rightForearmAnterior', 'rect', { x: 75, y: 180, width: 40, height: 55 }, 10)}
+      {renderSVGArea('rightUpperArmAnterior', 'rect', { x: 90, y: 115, width: 50, height: 65 }, 10)}
+      
+      {/* Left arm - hand, forearm, upper arm */}
+      {renderSVGArea('leftHandAnterior', 'rect', { x: 295, y: 235, width: 35, height: 30 }, 10)}
+      {renderSVGArea('leftForearmAnterior', 'rect', { x: 285, y: 180, width: 40, height: 55 }, 10)}
+      {renderSVGArea('leftUpperArmAnterior', 'rect', { x: 260, y: 115, width: 50, height: 65 }, 10)}
+      
+      {/* Right leg - thigh, lower leg, foot */}
+      {renderSVGArea('rightThighAnterior', 'rect', { x: 150, y: 280, width: 40, height: 85 }, 11)}
+      {renderSVGArea('rightLowerLegAnterior', 'rect', { x: 150, y: 365, width: 38, height: 70 }, 10)}
+      {renderSVGArea('rightFootAnterior', 'rect', { x: 148, y: 435, width: 40, height: 25 }, 10)}
+      
+      {/* Left leg - thigh, lower leg, foot */}
+      {renderSVGArea('leftThighAnterior', 'rect', { x: 210, y: 280, width: 40, height: 85 }, 11)}
+      {renderSVGArea('leftLowerLegAnterior', 'rect', { x: 212, y: 365, width: 38, height: 70 }, 10)}
+      {renderSVGArea('leftFootAnterior', 'rect', { x: 212, y: 435, width: 40, height: 25 }, 10)}
+    </svg>
+  );
+
+  const renderAdultBackView = () => (
+    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+      {/* Head */}
+      {renderSVGArea('headPosterior', 'circle', { cx: 200, cy: 60, r: 35 }, 14)}
+      
+      {/* Torso - split left/right */}
+      {renderSVGArea('torsoLeftPosterior', 'rect', { x: 150, y: 110, width: 50, height: 80 }, 11)}
+      {renderSVGArea('torsoRightPosterior', 'rect', { x: 200, y: 110, width: 50, height: 80 }, 11)}
+      
+      {/* Abdomen/buttocks - split left/right */}
+      {renderSVGArea('abdomenLeftPosterior', 'rect', { x: 150, y: 200, width: 50, height: 75 }, 11)}
+      {renderSVGArea('abdomenRightPosterior', 'rect', { x: 200, y: 200, width: 50, height: 75 }, 11)}
+      
+      {/* Right arm - hand, forearm, upper arm */}
+      {renderSVGArea('rightHandPosterior', 'rect', { x: 70, y: 235, width: 35, height: 30 }, 10)}
+      {renderSVGArea('rightForearmPosterior', 'rect', { x: 75, y: 180, width: 40, height: 55 }, 10)}
+      {renderSVGArea('rightUpperArmPosterior', 'rect', { x: 90, y: 115, width: 50, height: 65 }, 10)}
+      
+      {/* Left arm - hand, forearm, upper arm */}
+      {renderSVGArea('leftHandPosterior', 'rect', { x: 295, y: 235, width: 35, height: 30 }, 10)}
+      {renderSVGArea('leftForearmPosterior', 'rect', { x: 285, y: 180, width: 40, height: 55 }, 10)}
+      {renderSVGArea('leftUpperArmPosterior', 'rect', { x: 260, y: 115, width: 50, height: 65 }, 10)}
+      
+      {/* Right leg - thigh, lower leg, foot */}
+      {renderSVGArea('rightThighPosterior', 'rect', { x: 150, y: 280, width: 40, height: 85 }, 11)}
+      {renderSVGArea('rightLowerLegPosterior', 'rect', { x: 150, y: 365, width: 38, height: 70 }, 10)}
+      {renderSVGArea('rightFootPosterior', 'rect', { x: 148, y: 435, width: 40, height: 25 }, 10)}
+      
+      {/* Left leg - thigh, lower leg, foot */}
+      {renderSVGArea('leftThighPosterior', 'rect', { x: 210, y: 280, width: 40, height: 85 }, 11)}
+      {renderSVGArea('leftLowerLegPosterior', 'rect', { x: 212, y: 365, width: 38, height: 70 }, 10)}
+      {renderSVGArea('leftFootPosterior', 'rect', { x: 212, y: 435, width: 40, height: 25 }, 10)}
+    </svg>
+  );
+
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Mapa Interactivo de Área Quemada
+        <span className="text-sm text-blue-600 ml-2">(Subdivisiones detalladas)</span>
       </h2>
 
       <div className="bg-blue-50 p-4 rounded-lg mb-6">
         <p className="text-sm text-gray-700 mb-2">
           <strong>Instrucciones:</strong> Haz clic sobre el diagrama del cuerpo para marcar las áreas quemadas.
-          Los valores se calcularán automáticamente según donde hagas clic. Si marcas solo parte de una sección, verás un porcentaje proporcional.
+          Los valores se calcularán automáticamente según donde hagas clic.
         </p>
-        <p className="text-xs text-gray-600">
-          {isAdult && 'Para mayores de 10 años: selecciona vista frontal o posterior para marcar ambas caras del cuerpo.'}
+        <p className="text-xs text-blue-700 font-semibold">
+          {isChild 
+            ? 'Para niños menores de 10 años: cabeza dividida en 4 cuadrantes, brazos y piernas en 3 secciones cada uno.'
+            : 'Para personas de 10 años o más: brazos y piernas divididos en 3 secciones cada uno (mano, antebrazo/pierna inferior, brazo/muslo).'}
         </p>
       </div>
 
-      {/* Direct Input Fields - Organized by Front/Back */}
+      {/* Direct Input Fields */}
       <div className="bg-gray-50 p-6 rounded-lg mb-6 border border-gray-300">
         <h3 className="text-lg font-bold text-gray-800 mb-4">Especificar Porcentajes Directamente</h3>
         
@@ -557,10 +399,11 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Object.entries(areaDefs)
-              .filter(([, def]) => def.side === 'front' || def.side === 'both')
+              .filter(([_key, def]) => def.side === 'front')
+              .sort((a, b) => a[1].label.localeCompare(b[1].label))
               .map(([key, def]) => (
                 <div key={key} className="flex flex-col">
-                  <label className="text-sm font-semibold text-gray-700 mb-1">
+                  <label className="text-xs font-semibold text-gray-700 mb-1">
                     {def.label.replace(' Anterior', '').replace(' Posterior', '')}
                   </label>
                   <div className="flex items-center gap-2">
@@ -571,10 +414,10 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
                       step="0.1"
                       value={areas[key as keyof typeof areas] || ''}
                       onChange={(e) => handleDirectInput(key, e.target.value)}
-                      className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0"
                     />
-                    <span className="text-xs text-gray-600 w-8">
+                    <span className="text-xs text-gray-600 w-12">
                       /{def.maxValue.toFixed(1)}
                     </span>
                   </div>
@@ -593,10 +436,11 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Object.entries(areaDefs)
-              .filter(([, def]) => def.side === 'back' || def.side === 'both')
+              .filter(([_key, def]) => def.side === 'back')
+              .sort((a, b) => a[1].label.localeCompare(b[1].label))
               .map(([key, def]) => (
                 <div key={key} className="flex flex-col">
-                  <label className="text-sm font-semibold text-gray-700 mb-1">
+                  <label className="text-xs font-semibold text-gray-700 mb-1">
                     {def.label.replace(' Anterior', '').replace(' Posterior', '')}
                   </label>
                   <div className="flex items-center gap-2">
@@ -607,10 +451,10 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
                       step="0.1"
                       value={areas[key as keyof typeof areas] || ''}
                       onChange={(e) => handleDirectInput(key, e.target.value)}
-                      className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                       placeholder="0"
                     />
-                    <span className="text-xs text-gray-600 w-8">
+                    <span className="text-xs text-gray-600 w-12">
                       /{def.maxValue.toFixed(1)}
                     </span>
                   </div>
@@ -623,8 +467,48 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
         </div>
       </div>
 
-      {/* Diagram section - Front/Back view for all ages */}
-      {renderBodyDiagram()}
+      {/* Diagram section */}
+      <div className="space-y-6">
+        {/* View selector */}
+        <div className="flex gap-2 justify-center mb-4">
+          <button
+            onClick={() => setViewMode('front')}
+            className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+              viewMode === 'front'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+            }`}
+          >
+            Vista Frontal
+          </button>
+          <button
+            onClick={() => setViewMode('back')}
+            className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+              viewMode === 'back'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+            }`}
+          >
+            Vista Posterior
+          </button>
+        </div>
+
+        {/* Front view */}
+        {viewMode === 'front' && (
+          <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+            <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Frontal</h3>
+            {isChild ? renderChildFrontView() : renderAdultFrontView()}
+          </div>
+        )}
+
+        {/* Back view */}
+        {viewMode === 'back' && (
+          <div className="bg-white p-6 rounded-lg border-2 border-gray-300">
+            <h3 className="text-center text-lg font-bold text-gray-700 mb-4">Vista Posterior</h3>
+            {isChild ? renderChildBackView() : renderAdultBackView()}
+          </div>
+        )}
+      </div>
 
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg mb-6 border-2 border-blue-200 mt-6">
         <p className="text-center text-lg font-bold text-blue-700 mb-3">
@@ -636,7 +520,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
           ) : totalBSA > 100 ? (
             <span className="text-red-600">⚠ Excede 100% ({(totalBSA - 100).toFixed(1)}% de más)</span>
           ) : (
-            <span className="text-orange-600">⚠ Por debajo de 100% ({(100 - totalBSA).toFixed(1)}% de menos)</span>
+            <span className="text-orange-600">⚠ Menos de 100% ({(100 - totalBSA).toFixed(1)}% restante)</span>
           )}
         </p>
       </div>

@@ -84,11 +84,11 @@ export const ClinicalSummary: React.FC<ClinicalSummaryProps> = ({ onBack, onRese
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Tórax Anterior</p>
-              <p className="font-bold text-lg">{data.bodyAreas.torsoAnterior.toFixed(1)}%</p>
+              <p className="font-bold text-lg">{(data.bodyAreas.torsoLeftAnterior + data.bodyAreas.torsoRightAnterior).toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Tórax Posterior</p>
-              <p className="font-bold text-lg">{data.bodyAreas.torsoPosterior.toFixed(1)}%</p>
+              <p className="font-bold text-lg">{(data.bodyAreas.torsoLeftPosterior + data.bodyAreas.torsoRightPosterior).toFixed(1)}%</p>
             </div>
             <div className="bg-white p-3 rounded">
               <p className="text-gray-600">Brazo Derecho</p>
