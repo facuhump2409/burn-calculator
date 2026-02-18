@@ -24,8 +24,51 @@
 ## Project Overview
 Pediatric burn assessment calculator implementing:
 - **Parkland Formula** (4 ml × kg × %BSA) for fluid resuscitation
-- **Rule of 9s** for body surface area estimation
+- **Lund-Browder Method** for age-adjusted body surface area estimation
 - Interactive body diagram for burn area selection
+
+## Lund-Browder Percentage Tables (CRITICAL)
+**These tables MUST be followed exactly in all calculations and UI rendering.**
+
+### 10 Years or Higher (10 years included)
+| Body Region | Anterior % | Posterior % | Total % |
+|-------------|-----------|-------------|---------|
+| Head & Neck | 4.5% | 4.5% | 9% |
+| Trunk (Torso/Back) | 18% (4.5 × 4) | 18% (4.5 × 4) | 36% |
+| Arms (Both) | 9% (1.5 × 6) | 9% (1.5 × 6) | 18% |
+| Thighs (Both) | 9% (4.5 × 2) | 9% (4.5 × 2) | 18% |
+| Legs (Both) | 6% (3 × 2) | 6% (3 × 2) | 12% |
+| Feet (Both) | 3% (1.5 × 2) | 3% (1.5 × 2) | 7%* |
+| **Grand Total** | **49.5%** | **50.5%** | **100%** |
+
+**Head Division:** Single area (NO subdivision)
+- Per head: 4.5% anterior + 4.5% posterior = 9% total
+
+### 1 Year Old
+| Body Region | Anterior % | Posterior % | Total % |
+|-------------|-----------|-------------|---------|
+| Head & Neck | 9% (4.5 + 4.5) | 9% (4.5 + 4.5) | 18% |
+| Trunk (Torso/Back) | 16% (4+4+4+4) | 16% (4+4+4+4) | 32% |
+| Arms (Both) | 9% (1.5×6) | 9% (1.5×6) | 18% |
+| Thighs (Both) | 7% (3.5×2) | 7% (3.5×2) | 14% |
+| Legs (Both) | 5% (2.5×2) | 5% (2.5×2) | 10% |
+| Feet (Both) | 3% (1.5×2) | 3% (1.5×2) | 6% |
+| **Grand Total** | **49%** | **51%** | **100%** |
+
+**Head Division:** 4 quadrants
+- Left anterior: 4.5%
+- Right anterior: 4.5%
+- Left posterior: 4.5%
+- Right posterior: 4.5%
+- Total: 18%
+
+### Implementation Notes
+- **Age < 10:** Use 4-quadrant head subdivision + detailed arm/leg subdivisions
+- **Age ≥ 10:** Use single head area + detailed arm/leg subdivisions
+- All ages use left/right splits for torso and abdomen
+- Arms divided into: hand (1.5%), forearm (1.5%), upper arm (1.5%) per side
+- Legs divided into: foot (1.5%), lower leg (varies by age), thigh (varies by age) per side
+- **No genital area tracking** (removed per medical guidelines)
 
 ## Common Commands
 - **Install:** `npm install`

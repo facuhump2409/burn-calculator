@@ -184,7 +184,36 @@ export const useBurnStore = create<BurnStore>((set, get) => ({
 
   calculateBSA: () => {
     const { data } = get();
-    return Object.values(data.bodyAreas).reduce((sum, val) => sum + val, 0);
+    const isChild = data.age < 10;
+    const areas = data.bodyAreas;
+    
+    // Sum only the relevant areas based on age
+    let total = 0;
+    
+    // Head: use child subdivisions OR adult single area
+    if (isChild) {
+      total += areas.headLeftAnterior + areas.headRightAnterior + areas.headLeftPosterior + areas.headRightPosterior;
+    } else {
+      total += areas.headAnterior + areas.headPosterior;
+    }
+    
+    // Torso and abdomen (always subdivided)
+    total += areas.torsoLeftAnterior + areas.torsoRightAnterior + areas.torsoLeftPosterior + areas.torsoRightPosterior;
+    total += areas.abdomenLeftAnterior + areas.abdomenRightAnterior + areas.abdomenLeftPosterior + areas.abdomenRightPosterior;
+    
+    // Arms (always subdivided)
+    total += areas.rightHandAnterior + areas.rightForearmAnterior + areas.rightUpperArmAnterior;
+    total += areas.rightHandPosterior + areas.rightForearmPosterior + areas.rightUpperArmPosterior;
+    total += areas.leftHandAnterior + areas.leftForearmAnterior + areas.leftUpperArmAnterior;
+    total += areas.leftHandPosterior + areas.leftForearmPosterior + areas.leftUpperArmPosterior;
+    
+    // Legs (always subdivided)
+    total += areas.rightFootAnterior + areas.rightLowerLegAnterior + areas.rightThighAnterior;
+    total += areas.rightFootPosterior + areas.rightLowerLegPosterior + areas.rightThighPosterior;
+    total += areas.leftFootAnterior + areas.leftLowerLegAnterior + areas.leftThighAnterior;
+    total += areas.leftFootPosterior + areas.leftLowerLegPosterior + areas.leftThighPosterior;
+    
+    return total;
   },
 
   reset: () => {

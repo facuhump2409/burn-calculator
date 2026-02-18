@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useBurnStore } from '../store/burnStore';
+import { getDefaultBodyAreas } from '../utils/calculations';
 
 interface PatientDataProps {
   onNext: () => void;
@@ -7,6 +8,7 @@ interface PatientDataProps {
 
 export const PatientData: React.FC<PatientDataProps> = ({ onNext }) => {
   const { data, updateData } = useBurnStore();
+  const prevAgeRef = useRef<number>(data.age);
 
   // Set default time to current time on first load
   useEffect(() => {
@@ -17,6 +19,24 @@ export const PatientData: React.FC<PatientDataProps> = ({ onNext }) => {
       updateData({ accidentTime: `${hours}:${minutes}` });
     }
   }, []);
+
+  // Reset body areas when age crosses the 10-year threshold
+  useEffect(() => {
+    const prevAge = prevAgeRef.current;
+    const wasChild = prevAge < 10;
+    const isChild = data.age < 10;
+    
+    // If age crossed the threshold, reset body areas to defaults
+    if (wasChild !== isChild && data.age > 0) {
+      const defaults = getDefaultBodyAreas(data.age);
+      updateData({ 
+        bodyAreas: defaults,
+        estimatedBSA: Object.values(defaults).reduce((sum, val) => sum + val, 0)
+      });
+    }
+    
+    prevAgeRef.current = data.age;
+  }, [data.age, updateData]);
 
   const handleInputChange = (field: string, value: string | number) => {
     updateData({ [field]: value } as Partial<typeof data>);
