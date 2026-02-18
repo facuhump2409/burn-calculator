@@ -94,10 +94,6 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     const currentValue = areas[areaKey as keyof typeof areas];
     const displayValue = hoveredArea === areaKey ? hoveredValue : currentValue;
 
-    const labelX = shape === 'circle' 
-      ? shapeProps.cx + shapeProps.r + 10 
-      : shapeProps.x + shapeProps.width + 10;
-
     return (
       <g
         onMouseMove={(e) => handleSvgMouseMove(e, areaKey)}
