@@ -103,19 +103,19 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     
     // Right leg subdivisions
     rightFootAnterior: { label: 'Pie Der. Anterior', maxValue: 1.5, color: '#34d399', side: 'front' },
-    rightLowerLegAnterior: { label: 'Pierna Der. Inf. Anterior', maxValue: 2.75, color: '#34d399', side: 'front' },
-    rightThighAnterior: { label: 'Muslo Der. Anterior', maxValue: 4, color: '#34d399', side: 'front' },
+    rightLowerLegAnterior: { label: 'Pierna Der. Inf. Anterior', maxValue: 2.5, color: '#34d399', side: 'front' },
+    rightThighAnterior: { label: 'Muslo Der. Anterior', maxValue: 3.5, color: '#34d399', side: 'front' },
     rightFootPosterior: { label: 'Pie Der. Posterior', maxValue: 1.5, color: '#34d399', side: 'back' },
-    rightLowerLegPosterior: { label: 'Pierna Der. Inf. Posterior', maxValue: 2.75, color: '#34d399', side: 'back' },
-    rightThighPosterior: { label: 'Muslo Der. Posterior', maxValue: 4, color: '#34d399', side: 'back' },
+    rightLowerLegPosterior: { label: 'Pierna Der. Inf. Posterior', maxValue: 2.5, color: '#34d399', side: 'back' },
+    rightThighPosterior: { label: 'Muslo Der. Posterior', maxValue: 3.5, color: '#34d399', side: 'back' },
     
     // Left leg subdivisions
     leftFootAnterior: { label: 'Pie Izq. Anterior', maxValue: 1.5, color: '#34d399', side: 'front' },
-    leftLowerLegAnterior: { label: 'Pierna Izq. Inf. Anterior', maxValue: 2.75, color: '#34d399', side: 'front' },
-    leftThighAnterior: { label: 'Muslo Izq. Anterior', maxValue: 4, color: '#34d399', side: 'front' },
+    leftLowerLegAnterior: { label: 'Pierna Izq. Inf. Anterior', maxValue: 2.5, color: '#34d399', side: 'front' },
+    leftThighAnterior: { label: 'Muslo Izq. Anterior', maxValue: 3.5, color: '#34d399', side: 'front' },
     leftFootPosterior: { label: 'Pie Izq. Posterior', maxValue: 1.5, color: '#34d399', side: 'back' },
-    leftLowerLegPosterior: { label: 'Pierna Izq. Inf. Posterior', maxValue: 2.75, color: '#34d399', side: 'back' },
-    leftThighPosterior: { label: 'Muslo Izq. Posterior', maxValue: 4, color: '#34d399', side: 'back' },
+    leftLowerLegPosterior: { label: 'Pierna Izq. Inf. Posterior', maxValue: 2.5, color: '#34d399', side: 'back' },
+    leftThighPosterior: { label: 'Muslo Izq. Posterior', maxValue: 3.5, color: '#34d399', side: 'back' },
   };
 
   const handleAreaClick = (areaKey: string, percentageAtPoint: number) => {
@@ -191,6 +191,10 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
     const currentValue = areas[areaKey as keyof typeof areas];
     const displayValue = hoveredArea === areaKey ? hoveredValue : currentValue;
 
+    const labelX = shape === 'circle' 
+      ? shapeProps.cx + shapeProps.r + 10 
+      : shapeProps.x + shapeProps.width + 10;
+
     return (
       <g
         onMouseMove={(e) => handleSvgMouseMove(e, areaKey)}
@@ -223,12 +227,23 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
         >
           {displayValue > 0 ? displayValue.toFixed(1) : '?'}%
         </text>
+        {/* Max value label on the side */}
+        <text
+          x={labelX}
+          y={shape === 'circle' ? shapeProps.cy + 5 : shapeProps.y + shapeProps.height / 2 + 5}
+          textAnchor="start"
+          fontSize="10"
+          fontWeight="normal"
+          fill="#666"
+        >
+          max: {def.maxValue.toFixed(1)}%
+        </text>
       </g>
     );
   };
 
   const renderChildFrontView = () => (
-    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
       {/* Head - split left/right */}
       {renderSVGArea('headLeftAnterior', 'circle', { cx: 180, cy: 60, r: 25 }, 11)}
       {renderSVGArea('headRightAnterior', 'circle', { cx: 220, cy: 60, r: 25 }, 11)}
@@ -264,7 +279,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   );
 
   const renderChildBackView = () => (
-    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
       {/* Head - split left/right */}
       {renderSVGArea('headLeftPosterior', 'circle', { cx: 180, cy: 60, r: 25 }, 11)}
       {renderSVGArea('headRightPosterior', 'circle', { cx: 220, cy: 60, r: 25 }, 11)}
@@ -300,7 +315,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   );
 
   const renderAdultFrontView = () => (
-    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
       {/* Head */}
       {renderSVGArea('headAnterior', 'circle', { cx: 200, cy: 60, r: 35 }, 14)}
       
@@ -335,7 +350,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
   );
 
   const renderAdultBackView = () => (
-    <svg ref={svgRef} viewBox="0 0 400 700" className="w-full max-w-sm mx-auto">
+    <svg ref={svgRef} viewBox="0 0 500 700" className="w-full max-w-sm mx-auto">
       {/* Head */}
       {renderSVGArea('headPosterior', 'circle', { cx: 200, cy: 60, r: 35 }, 14)}
       
