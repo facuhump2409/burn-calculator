@@ -130,17 +130,6 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
         >
           {displayValue > 0 ? displayValue.toFixed(1) : '?'}%
         </text>
-        {/* Max value label on the side */}
-        <text
-          x={labelX}
-          y={shape === 'circle' ? shapeProps.cy + 5 : shapeProps.y + shapeProps.height / 2 + 5}
-          textAnchor="start"
-          fontSize="10"
-          fontWeight="normal"
-          fill="#666"
-        >
-          max: {def.maxValue.toFixed(1)}%
-        </text>
       </g>
     );
   };
