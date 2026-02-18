@@ -317,7 +317,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Object.entries(areaDefs)
-              .filter(([_key, def]) => def.side === 'front')
+              .filter(([_key, def]) => def.side === 'front' && def.includeInUI !== false)
               .sort((a, b) => a[1].label.localeCompare(b[1].label))
               .map(([key, def]) => (
                 <div key={key} className="flex flex-col">
@@ -354,7 +354,7 @@ export const BodyDiagram: React.FC<BodyDiagramProps> = ({ onNext, onBack }) => {
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Object.entries(areaDefs)
-              .filter(([_key, def]) => def.side === 'back')
+              .filter(([_key, def]) => def.side === 'back' && def.includeInUI !== false)
               .sort((a, b) => a[1].label.localeCompare(b[1].label))
               .map(([key, def]) => (
                 <div key={key} className="flex flex-col">

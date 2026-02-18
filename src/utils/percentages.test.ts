@@ -5,6 +5,9 @@ import { getLundBrowderPercentages } from './calculations';
 const sumMaxValues = (keys: string[], defs: Record<string, { maxValue: number }>) =>
   keys.reduce((total, key) => total + defs[key].maxValue, 0);
 
+const sumBySide = (side: 'front' | 'back', defs: Record<string, { maxValue: number; side: string }>) =>
+  Object.values(defs).reduce((total, def) => (def.side === side ? total + def.maxValue : total), 0);
+
 
 describe('Body diagram percentages (AGENTS.md)', () => {
   it('matches child (<10) percentages for the graph', () => {
@@ -57,6 +60,9 @@ describe('Body diagram percentages (AGENTS.md)', () => {
 
     expect(sumMaxValues(['rightFootAnterior', 'leftFootAnterior'], defs)).toBeCloseTo(3, 5);
     expect(sumMaxValues(['rightFootPosterior', 'leftFootPosterior'], defs)).toBeCloseTo(3, 5);
+
+    expect(sumBySide('front', defs)).toBeCloseTo(49, 5);
+    expect(sumBySide('back', defs)).toBeCloseTo(51, 5);
   });
 
   it('matches adult (10+) percentages for the graph', () => {
@@ -106,6 +112,9 @@ describe('Body diagram percentages (AGENTS.md)', () => {
 
     expect(sumMaxValues(['rightFootAnterior', 'leftFootAnterior'], defs)).toBeCloseTo(3, 5);
     expect(sumMaxValues(['rightFootPosterior', 'leftFootPosterior'], defs)).toBeCloseTo(3, 5);
+
+    expect(sumBySide('front', defs)).toBeCloseTo(49.5, 5);
+    expect(sumBySide('back', defs)).toBeCloseTo(50.5, 5);
   });
 });
 
